@@ -30,7 +30,7 @@ module Processing_Element #(
 
     always @(posedge CLK) begin
         if (RST_MUL) PC <= 'b0;
-        else PC <= (INC_PC == 1) ? PC + 'b1 : PC;
+        else PC <= (INC_PC) ? PC + 'b1 : PC;
     end
 
     always @(posedge CLK) begin
