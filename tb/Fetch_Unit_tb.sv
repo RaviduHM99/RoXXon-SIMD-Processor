@@ -10,12 +10,11 @@ module Fetch_Unit_tb ();
     logic [N-1:0][31:0] MAT_IN;
     logic MATAB_MUX, DONE, DOUT_MUX;
 
-    logic [$clog2(REGN) - 1:0] PC_INS;
+    logic [$clog2(REGN/2) - 1:0] PC_INS;
     logic [31:0] INSTR;
     logic [31:0] RESULT;
     logic [31:0] DATAOUT;
 
-    logic DONE_DATAB;
     logic [$clog2(N)-1:0]SEQ_B;
     logic [N-1:0][N-1:0][31:0] MAT_OUT;
 
@@ -34,45 +33,44 @@ module Fetch_Unit_tb ();
         INSTRDATA <= 32'dz;
         MAT_IN <= {32'd2, 32'd1};
         DATAOUT <= 32'dz;
+        SEQ_B <= 'd1;
 
         DOUT_MUX <= 0;
         DONE <= 0;
         MATAB_MUX <= 0;
-        DONE_DATAB <= 1;
 
         #(CLK_PERIOD*2) //MATRIX A Input data fetching
         INSTRDATA <= 32'dz;
         MAT_IN <= {32'd4, 32'd5};
         DATAOUT <= 32'dz;
+        SEQ_B <= 'd0;
 
         DOUT_MUX <= 0;
         DONE <= 0;
         MATAB_MUX <= 1;
-        DONE_DATAB <= 0;
 
         #(CLK_PERIOD*1)
         MAT_IN <= {32'd7, 32'd8};
-        DONE_DATAB <= 0;
 
         #(CLK_PERIOD*2) //Instruction Fetching
         INSTRDATA <= 32'd5;
         MAT_IN <= {32'dz, 32'dz};
         DATAOUT <= 32'dz;
+        SEQ_B <= 'd0;
 
         DOUT_MUX <= 0;
         DONE <= 0;
         MATAB_MUX <= 1;
-        DONE_DATAB <= 0;
 
         #(CLK_PERIOD*2) //Result Output & Next PC
         INSTRDATA <= 32'dz;
         MAT_IN <= {32'dz, 32'dz};
         DATAOUT <= 32'd45;
+        SEQ_B <= 'd0;
 
         DOUT_MUX <= 1;
         DONE <= 1;
         MATAB_MUX <= 1;
-        DONE_DATAB <= 0;
 
         #(CLK_PERIOD*2) 
 

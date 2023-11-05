@@ -13,10 +13,9 @@ module Fetch_Unit #(
 
     output logic [$clog2(REGN/2) - 1:0] PC_INS,
     output logic [31:0] INSTR,
-    output logic [31:0] RESULT,
-    input logic [31:0] DATAOUT,
+    output logic [N-1:0][31:0] RESULT,
+    input logic [N-1:0][31:0] DATAOUT,
 
-    input logic DONE_DATAB,
     input logic [$clog2(N)-1:0] SEQ_B,
     output logic [N-1:0][N-1:0][31:0] MAT_OUT
 );
@@ -31,12 +30,6 @@ module Fetch_Unit #(
         else PC_REG_INS <= (DONE) ? PC_REG_INS + 'd1 : PC_REG_INS;
     end
 
-    /*reg [$clog2(N)-1:0] PC_REG_DATA;
-    always_ff @(posedge CLK) begin
-        if (RSTN) PC_REG_DATA <= 'd0;
-        else PC_REG_DATA <= (DONE_DATAB) ? PC_REG_DATA + 'b1 : PC_REG_DATA;
-    end*/
-
     always_ff @(posedge CLK) begin
         if (MATAB_MUX) MAT_OUT <= {N{MAT_IN}}; //MATAB_MUX=1 then MAT_A
         else begin
@@ -44,5 +37,4 @@ module Fetch_Unit #(
         end
     end
 
-    //assign SEQ_B = PC_REG_DATA;
 endmodule

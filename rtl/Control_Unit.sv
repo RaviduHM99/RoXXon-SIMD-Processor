@@ -21,17 +21,9 @@ module Control_Unit #(
     input logic ONSWT, //AXI GPIO logic should added here
     output logic OFFSWT
 );
-    enum  { IDLE, FETCHB, FETCHA, MATMUL, STORE } state, next_state;
+    enum  logic [2:0] { IDLE=3'd0, FETCHB=3'd1, FETCHA=3'd2, MATMUL=3'd3, STORE=3'd4 } state;
     reg [LogN-1:0] ADDR_C;
     logic [N-1:0] MATB_PE;
-
-    always_comb unique case (INSTR[2:0])
-        3'd0: next_state = IDLE;
-        3'd1: next_state = (ONSWT) ? FETCHB : IDLE;
-        3'd2: next_state = (ONSWT) ? FETCHA : IDLE;
-        3'd3: next_state = (ONSWT) ? MATMUL : IDLE;
-        3'd4: next_state = (ONSWT) ? STORE : IDLE;
-    endcase
 
     always_comb unique case (INSTR[6:3])
         4'd0: MATB_PE = 'b1000000000000000;
@@ -54,13 +46,13 @@ module Control_Unit #(
 
     always_ff @( posedge CLK ) begin 
         if (RSTN) ADDR_C <= 'd0;
-        else ADDR_C <= (state === FETCHA) ? INSTR[6:3] : ADDR_C;
+        else ADDR_C <= (INSTR[2:0] == FETCHA) ? INSTR[6:3] : ADDR_C; // 1cycle delay
     end
 
     always_ff @( posedge CLK ) begin
         if (RSTN) state <= IDLE;
         else
-            unique case (state)
+            unique case (INSTR[2:0])
                 IDLE : begin
                     MATAB_MUX <= 1'b1;
                     DONE <= (ONSWT) ? 1'b1 : 1'b0;
@@ -74,14 +66,13 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= 'b0000000000000000;
 
-                    MATAB_MUX <= 1'b0;
                     SEQ_A <= 'dz;
 
                     SEQ_DATC <= ADDR_C;
                     //SEQ_INS <=
 
                     OFFSWT <= (INSTR[7] == 1'b1) ? 1'b1 : 1'b0;
-                    state <= next_state;
+                    state <= IDLE;
                 end
 
                 FETCHB : begin
@@ -97,14 +88,13 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= MATB_PE; 
 
-                    MATAB_MUX <= 1'b0;
                     SEQ_A <= 'dz;
 
                     SEQ_DATC <= ADDR_C;
                     //SEQ_INS <=
 
                     OFFSWT <= 1'b0;
-                    state <= next_state;
+                    state <= (ONSWT) ? FETCHB : IDLE;
                 end
 
                 FETCHA : begin
@@ -120,14 +110,14 @@ module Control_Unit #(
                     MAT_MUX <= 'b1111111111111111;
                     WRITE_MAT <= 'b1111111111111111;
 
-                    MATAB_MUX <= 1'b1;
-                    SEQ_A <= ADDR_C;
+
+                    SEQ_A <= INSTR[6:3];
 
                     SEQ_DATC <= ADDR_C;
                     //SEQ_INS <=
 
                     OFFSWT <= 1'b0;
-                    state <= next_state;
+                    state <= (ONSWT) ? FETCHA : IDLE;
                 end
 
                 MATMUL : begin
@@ -143,7 +133,7 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= 'b0000000000000000;
 
-                    MATAB_MUX <= 1'b0;
+
                     SEQ_A <= 'dz;
 
                     SEQ_DATC <= ADDR_C;
@@ -152,9 +142,10 @@ module Control_Unit #(
                     OFFSWT <= 1'b0;
                     if (PC_Counter == 'd15) begin
                         DONE <= 1'b1;
-                        state <= next_state;
+                        state <= (ONSWT) ? MATMUL : IDLE;
                     end
                     else begin
+                        DONE <= 1'b0;
                         state <= MATMUL;
                     end
                 end
@@ -172,14 +163,14 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= 'b0000000000000000;
 
-                    MATAB_MUX <= 1'b0;
+
                     SEQ_A <= 'dz;
 
                     SEQ_DATC <= ADDR_C;
                     //SEQ_INS <=
 
                     OFFSWT <= 1'b0;
-                    state <= next_state;
+                    state <= (ONSWT) ? STORE : IDLE;
                 end
             endcase
     end
