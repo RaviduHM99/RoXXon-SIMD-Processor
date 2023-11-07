@@ -4,16 +4,16 @@ module Control_Unit #(
 )(
     input logic CLK, RSTN,
 
-    output logic MATAB_MUX, DONE, DOUT_MUX, //DONE_DATAB, //FETCH Unit
+    output logic DONE, DOUT_MUX, //DONE_DATAB, //FETCH Unit //MATAB_MUX, 
     //input logic [$clog2(REGN/2) - 1:0] PC_INS,
-    output logic [LogN-1:0] SEQ_B,
     input logic [31:0] INSTR,
 
     output logic [N-1:0] MAC_CTRL, RST_MUL, INC_PC, MAT_MUX, WRITE_MAT, //16 PEs
     input logic [LogN-1:0] PC_Counter,
 
-    //output logic MATAB_MUX, //REGFILE_AB
+    output logic MATAB_MUX, //REGFILE_AB
     output logic [LogN-1:0] SEQ_A,
+    output logic [LogN-1:0] SEQ_B,
 
     output logic [LogN-1:0] SEQ_DATC, //REGFILE_CR
     //output logic [$clog2(REGN/2)-1:0] SEQ_INS, // connect to PC_INS
@@ -26,38 +26,40 @@ module Control_Unit #(
     logic [N-1:0] MATB_PE;
 
     always_comb unique case (INSTR[6:3])
-        4'd0: MATB_PE = 'b1000000000000000;
-        4'd1: MATB_PE = 'b0100000000000000;
-        4'd2: MATB_PE = 'b0010000000000000;
-        4'd3: MATB_PE = 'b0001000000000000;
-        4'd4: MATB_PE = 'b0000100000000000;
-        4'd5: MATB_PE = 'b0000010000000000;
-        4'd6: MATB_PE = 'b0000001000000000;
-        4'd7: MATB_PE = 'b0000000100000000;
-        4'd8: MATB_PE = 'b0000000010000000;
-        4'd9: MATB_PE = 'b0000000001000000;
-        4'd10: MATB_PE = 'b0000000000100000;
-        4'd11: MATB_PE = 'b0000000000010000;
-        4'd12: MATB_PE = 'b0000000000001000;
-        4'd13: MATB_PE = 'b0000000000000100;
-        4'd14: MATB_PE = 'b0000000000000010;
-        4'd15: MATB_PE = 'b0000000000000001;
+        4'd15: MATB_PE = 'b1000000000000000;
+        4'd14: MATB_PE = 'b0100000000000000;
+        4'd13: MATB_PE = 'b0010000000000000;
+        4'd12: MATB_PE = 'b0001000000000000;
+        4'd11: MATB_PE = 'b0000100000000000;
+        4'd10: MATB_PE = 'b0000010000000000;
+        4'd9: MATB_PE = 'b0000001000000000;
+        4'd8: MATB_PE = 'b0000000100000000;
+        4'd7: MATB_PE = 'b0000000010000000;
+        4'd6: MATB_PE = 'b0000000001000000;
+        4'd5: MATB_PE = 'b0000000000100000;
+        4'd4: MATB_PE = 'b0000000000010000;
+        4'd3: MATB_PE = 'b0000000000001000;
+        4'd2: MATB_PE = 'b0000000000000100;
+        4'd1: MATB_PE = 'b0000000000000010;
+        4'd0: MATB_PE = 'b0000000000000001;
     endcase
 
     always_ff @( posedge CLK ) begin 
         if (RSTN) ADDR_C <= 'd0;
-        else ADDR_C <= (INSTR[2:0] == FETCHA) ? INSTR[6:3] : ADDR_C; // 1cycle delay
+        else ADDR_C <= (INSTR[2:0] == FETCHA) ? INSTR[6:3] : ADDR_C; // 1 cycle delay
     end
 
     always_ff @( posedge CLK ) begin
-        if (RSTN) state <= IDLE;
+        if (RSTN) begin 
+            state <= IDLE;
+            DONE <= 1'b0;
+        end
         else
             unique case (INSTR[2:0])
                 IDLE : begin
                     MATAB_MUX <= 1'b1;
                     DONE <= (ONSWT) ? 1'b1 : 1'b0;
                     DOUT_MUX <= 1'b0;
-                    //DONE_DATAB <= 1'b0;
                     SEQ_B <= 'dz;
 
                     MAC_CTRL <= 'b0000000000000000;
@@ -67,19 +69,14 @@ module Control_Unit #(
                     WRITE_MAT <= 'b0000000000000000;
 
                     SEQ_A <= 'dz;
-
                     SEQ_DATC <= ADDR_C;
-                    //SEQ_INS <=
-
                     OFFSWT <= (INSTR[7] == 1'b1) ? 1'b1 : 1'b0;
-                    state <= IDLE;
                 end
 
                 FETCHB : begin
                     MATAB_MUX <= 1'b0;
-                    DONE <= 1'b1; ////////////////////////////
+                    DONE <= 1'b1;
                     DOUT_MUX <= 1'b0;
-                    //DONE_DATAB <= 1'b1;
                     SEQ_B <= INSTR[6:3];
 
                     MAC_CTRL <= 'b0000000000000000;
@@ -89,19 +86,14 @@ module Control_Unit #(
                     WRITE_MAT <= MATB_PE; 
 
                     SEQ_A <= 'dz;
-
                     SEQ_DATC <= ADDR_C;
-                    //SEQ_INS <=
-
                     OFFSWT <= 1'b0;
-                    state <= (ONSWT) ? FETCHB : IDLE;
                 end
 
                 FETCHA : begin
                     MATAB_MUX <= 1'b1;
-                    DONE <= 1'b1; /////////////////////////
+                    DONE <= 1'b1; 
                     DOUT_MUX <= 1'b0;
-                    //DONE_DATAB <= 1'b0;
                     SEQ_B <= 'dz;
 
                     MAC_CTRL <= 'b0000000000000000;
@@ -110,21 +102,14 @@ module Control_Unit #(
                     MAT_MUX <= 'b1111111111111111;
                     WRITE_MAT <= 'b1111111111111111;
 
-
                     SEQ_A <= INSTR[6:3];
-
                     SEQ_DATC <= ADDR_C;
-                    //SEQ_INS <=
-
                     OFFSWT <= 1'b0;
-                    state <= (ONSWT) ? FETCHA : IDLE;
                 end
 
                 MATMUL : begin
                     MATAB_MUX <= 1'b1;
-
                     DOUT_MUX <= 1'b0;
-                    //DONE_DATAB <= 1'b0;
                     SEQ_B <= 'dz;
 
                     MAC_CTRL <= 'b1111111111111111;
@@ -133,20 +118,14 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= 'b0000000000000000;
 
-
                     SEQ_A <= 'dz;
-
                     SEQ_DATC <= ADDR_C;
-                    //SEQ_INS <=
-
                     OFFSWT <= 1'b0;
                     if (PC_Counter == 'd15) begin
                         DONE <= 1'b1;
-                        state <= (ONSWT) ? MATMUL : IDLE;
                     end
                     else begin
                         DONE <= 1'b0;
-                        state <= MATMUL;
                     end
                 end
 
@@ -154,7 +133,6 @@ module Control_Unit #(
                     MATAB_MUX <= 1'b1;
                     DONE <= 1'b1;
                     DOUT_MUX <= 1'b1;
-                    //DONE_DATAB <= 1'b0;
                     SEQ_B <= 'dz;
 
                     MAC_CTRL <= 'b0000000000000000;
@@ -163,14 +141,9 @@ module Control_Unit #(
                     MAT_MUX <= 'b0000000000000000;
                     WRITE_MAT <= 'b0000000000000000;
 
-
                     SEQ_A <= 'dz;
-
                     SEQ_DATC <= ADDR_C;
-                    //SEQ_INS <=
-
                     OFFSWT <= 1'b0;
-                    state <= (ONSWT) ? STORE : IDLE;
                 end
             endcase
     end

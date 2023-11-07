@@ -4,7 +4,6 @@ module REGFILE_AB #(
     parameter N = 16, REGN = 512, B_START = 256
 )(
     input logic CLK, RSTN,
-    input logic [REGN-1:0][31:0] IN_DATA, //warning 
     input logic [$clog2(N)-1:0] SEQ_A,
     input logic [$clog2(N)-1:0] SEQ_B,
     input logic MATAB_MUX,
@@ -14,12 +13,13 @@ module REGFILE_AB #(
     logic [N-1:0][31:0] MAT_INA;
     logic [N-1:0][31:0] MAT_INB;
 
-    always_ff @( posedge CLK ) begin
-        if (RSTN) AXI_SLAVE_REG <= {REGN{32'd0}};
-        else AXI_SLAVE_REG <= IN_DATA;
+    initial begin
+        for (integer i = 0; i < REGN; i = i + 1 ) begin
+            AXI_SLAVE_REG[i] = 32'd14;
+        end
     end
-
-    always_comb begin
+    assign MAT_IN = AXI_SLAVE_REG[15:0];
+    /*always_comb begin
         unique case (SEQ_A) // this cant be params
                 4'd0: MAT_INA = AXI_SLAVE_REG[15:0];
                 4'd1: MAT_INA = AXI_SLAVE_REG[31:16];
@@ -56,9 +56,9 @@ module REGFILE_AB #(
                 4'd13: MAT_INB = AXI_SLAVE_REG[223+B_START:208+B_START];
                 4'd14: MAT_INB = AXI_SLAVE_REG[239+B_START:224+B_START];
                 4'd15: MAT_INB = AXI_SLAVE_REG[255+B_START:240+B_START];
-                default: MAT_INA = 'dz;
+                default: MAT_INB = 'dz;
         endcase            
     end
 
-    assign MAT_IN = (MATAB_MUX) ? MAT_INA : MAT_INB;
+    assign MAT_IN = (MATAB_MUX) ? MAT_INA : MAT_INB;*/
 endmodule
