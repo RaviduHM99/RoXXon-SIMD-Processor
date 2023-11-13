@@ -10,6 +10,7 @@ module Processing_Element #(
     inout logic MAT_DATA,
     input logic [1:0] INOUT_MUX,
     input logic [3:0] INDATA_MUX,
+    input logic [3:0] OUTDATA_MUX,
     input logic WRTIE_EN,
 
     input logic ALUREG_MUX,
@@ -25,6 +26,7 @@ module Processing_Element #(
     logic [31:0] REG_A_wire;
     logic [31:0] REG_B_wire;
     logic [31:0] REG_C_wire;
+    logic [31:0] ALU_IN_wire;
 
     always_comb begin
         unique case (INOUT_MUX)
@@ -35,8 +37,17 @@ module Processing_Element #(
         endcase
     end
 
+    assign REG_C_wire = REG_C[OUTDATA_MUX];
+    assign REG_A[INOUT_MUX] = REG_A_wire;
+    assign REG_B[INOUT_MUX] = REG_B_wire;
+
+    assign ALU_IN_wire = (ALUACC_MUX) ? // add counter
+
     always @(posedge CLK) begin
         if (RSTN) begin
+            
+        end
+        else begin
             
         end
     end
