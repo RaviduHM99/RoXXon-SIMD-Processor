@@ -5,52 +5,87 @@ module Processing_Element #(
 )
 (
     input logic CLK,
-    input logic RSTN,
 
-    inout logic MAT_DATA,
-    input logic [1:0] INOUT_MUX,
-    input logic [3:0] INDATA_MUX,
-    input logic [3:0] OUTDATA_MUX,
-    input logic WRTIE_EN,
+    input logic RST_ADD,
+    input logic [31:0] DATAIN,
+    
+    input logic MAC_CTRL,
+    input logic RST_ACC,
+    input logic RST_PC,
 
-    input logic ALUREG_MUX,
-    input logic ALUACC_MUX,
-    input logic OUTDATA_MUX,
-    output logic DONE_OPS
+    input logic MAT_MUX,
+    input logic WRITE_MAT,
+    input logic DIMEN,
+    input logic OUT_READY,
+
+    output logic MAC_DONE,
+    output logic [31:0] DATAOUT
 );
 
-    reg [31:0] REG_A [N-1:0];
-    reg [31:0] REG_B [N-1:0];
-    reg [31:0] REG_C [N-1:0];
+    reg [N-1:0][31:0] MATA;
+    reg [N-1:0][31:0] MATB;
+    reg [31:0] ACC_DATA;
+    reg [$clog2(N)-1:0] PC;
+    reg [$clog2(N)-1:0] ADDR;
 
-    logic [31:0] REG_A_wire;
-    logic [31:0] REG_B_wire;
-    logic [31:0] REG_C_wire;
-    logic [31:0] ALU_IN_wire;
-
-    always_comb begin
-        unique case (INOUT_MUX)
-            2'd0 : REG_A_wire = MAT_DATA;
-            2'd1 : REG_B_wire = MAT_DATA;
-            2'd2 : REG_C_wire = MAT_DATA;
-            default : REG_A_wire = MAT_DATA;
-        endcase
+    initial begin
+        MATA[0] <= 'd0; MATA[1] <= 'd0; MATA[2] <= 'd0; MATA[3] <= 'd0; MATA[4] <= 'd0; MATA[5] <= 'd0; MATA[6] <= 'd0; MATA[7] <= 'd0; MATA[8] <= 'd0; MATA[9] <= 'd0; MATA[10] <= 'd0; MATA[11] <= 'd0; MATA[12] <= 'd0; MATA[13] <= 'd0; MATA[14] <= 'd0; MATA[15] <= 'd0;
+        MATB[0] <= 'd0; MATB[1] <= 'd0; MATB[2] <= 'd0; MATB[3] <= 'd0; MATB[4] <= 'd0; MATB[5] <= 'd0; MATB[6] <= 'd0; MATB[7] <= 'd0; MATB[8] <= 'd0; MATB[9] <= 'd0; MATB[10] <= 'd0; MATB[11] <= 'd0; MATB[12] <= 'd0; MATB[13] <= 'd0; MATB[14] <= 'd0; MATB[15] <= 'd0;
     end
 
-    assign REG_C_wire = REG_C[OUTDATA_MUX];
-    assign REG_A[INOUT_MUX] = REG_A_wire;
-    assign REG_B[INOUT_MUX] = REG_B_wire;
+    logic INC_PC;
+    always @(posedge CLK) begin
+        if (RST_PC) PC <= 'b0;
+        else PC <= (INC_PC) ? PC + 'b1 : PC;
+    end
 
-    assign ALU_IN_wire = (ALUACC_MUX) ? // add counter
+    always_ff @( posedge CLK ) begin 
+        if (RST_ADD) ADDR <= 'd0;
+        else ADDR <= (WRITE_MAT) ? ADDR + 1'd1 : ADDR;
+    end
 
     always @(posedge CLK) begin
-        if (RSTN) begin
-            
+        if (WRITE_MAT) begin
+            MATA[ADDR] <= (MAT_MUX) ? DATAIN : MATA[ADDR];
+            MATB[ADDR] <= (MAT_MUX) ? MATB[ADDR] : DATAIN;
         end
         else begin
-            
+            MATA[ADDR] <= MATA[ADDR];
+            MATB[ADDR] <= MATB[ADDR];
         end
     end
+  
+    ///// MAC Module /////
+    wire [31:0] MUL_DATA;
 
+    assign MUL_DATA = (MAC_CTRL) ? MATA[PC]*MATB[PC] : 'd0;
+
+    always_ff @(posedge CLK) begin
+        if (RST_ACC) ACC_DATA <= 32'd0;
+        else ACC_DATA <= (MAC_CTRL) ? ACC_DATA + MUL_DATA : ACC_DATA;
+    end
+    
+    assign DATAOUT = (OUT_READY) ? ACC_DATA : 32'dz;
+
+    always_comb begin
+        unique case (DIMEN)
+            2'd0 : begin
+                INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 4'd1) ? 1'b1 : 1'b0;
+            end
+            2'd1 : begin
+                INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 4'd3) ? 1'b1 : 1'b0;
+            end
+            2'd2 : begin
+                INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 4'd7) ? 1'b1 : 1'b0;
+            end
+            2'd3 : begin
+                INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 4'd15) ? 1'b1 : 1'b0;
+            end      
+        endcase
+    end
     
 endmodule
