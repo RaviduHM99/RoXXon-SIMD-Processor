@@ -1,13 +1,12 @@
-module Control_Unit_tb;
+module CU_Instr_tb;
     timeunit 1ns/1ps;
     localparam N = 256;
     localparam CLK_PERIOD = 10;
 
     logic CLK=0, RSTN=0;
 
-    logic [31:0] INSTR; // INST FETCH
-    logic PC_INCR;
-    logic INSTR_DONE; 
+    logic [31:0] INSTR_AXI; // INST FETCH
+    logic [$clog2(N)-1:0] PC_AXI;
 
     logic [3:0] RST_ADD; // PE
     logic [3:0] MAC_CTRL;
@@ -33,7 +32,7 @@ module Control_Unit_tb;
     logic START_SIGNAL; //GPIO
     logic STOP_SIGNAL;
 
-    Control_Unit dut (.*);
+    CU_Instr_Wrapper #(.N(N)) dut (.*);
 
     initial forever begin
         #(CLK_PERIOD/2) CLK <= ~CLK;
@@ -43,7 +42,7 @@ module Control_Unit_tb;
         $dumpfile("Instr_Fetch_tb.vcd"); $dumpvars;
         @(posedge CLK); 
         #1 RSTN <= 1'b1;
-        INSTR <= 32'd0;
+        INSTR_AXI <= 32'd0;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -51,7 +50,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'd0;
+        INSTR_AXI <= 32'd0;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -59,15 +58,15 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b01010100100010; 
+        INSTR_AXI <= 32'b01010100100010; 
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
 
-        #(CLK_PERIOD*2) 
+        #(CLK_PERIOD*3) 
         RSTN <= 0; 
-        INSTR <= 32'b01010100100010;
+        INSTR_AXI <= 32'b01100110000011;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b1;
         STORE_DONE <= 1'b0;
@@ -75,7 +74,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b01100110000011;
+        INSTR_AXI <= 32'b01100110000011;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -83,7 +82,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD*2) 
         RSTN <= 0; 
-        INSTR <= 32'b01100110000011;
+        INSTR_AXI <= 32'b00000000000100;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b1;
         STORE_DONE <= 1'b0;
@@ -91,7 +90,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b00000000000100;
+        INSTR_AXI <= 32'b00000000000100;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -99,7 +98,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD*2)  
         RSTN <= 0; 
-        INSTR <= 32'b00000000000100;
+        INSTR_AXI <= 32'b00011000000101;
         MAC_DONE <= 1'b1;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -107,7 +106,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b00011000000101;
+        INSTR_AXI <= 32'b00011000000101;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
@@ -115,7 +114,7 @@ module Control_Unit_tb;
 
         #(CLK_PERIOD*3)
         RSTN <= 0; 
-        INSTR <= 32'b00011000000101;
+        INSTR_AXI <= 32'b00000000000110;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b1;
@@ -123,7 +122,7 @@ module Control_Unit_tb;
         
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b00000000000110;
+        INSTR_AXI <= 32'b00000000000110;
         MAC_DONE <= 1'b0;
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;

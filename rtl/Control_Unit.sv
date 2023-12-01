@@ -34,8 +34,6 @@ module Control_Unit(
 
 enum logic [2:0] { IDLE, FETCH, LOADA, LOADB, MULTACC, STORE, STOP} STATE, NEXT_STATE;
 
-logic [3:0] LOAD_COUNTA;
-
 always_comb begin
     unique case (INSTR[2:0])
         3'd0 : NEXT_STATE = IDLE;
@@ -45,10 +43,11 @@ always_comb begin
         3'd4 : NEXT_STATE = MULTACC;
         3'd5 : NEXT_STATE = STORE;
         3'd6 : NEXT_STATE = STOP;
-        3'd7 : NEXT_STATE = IDLE;  
+        default : NEXT_STATE = IDLE;  
     endcase
 end
 
+assign INSTR_DONE = ((STATE == IDLE) | FETCH_DONE | MAC_DONE | STORE_DONE) ? 1'b1 : 1'b0;
 
 always_ff @( posedge CLK ) begin 
     if (RSTN) begin
@@ -61,13 +60,13 @@ always_ff @( posedge CLK ) begin
         ADDR_RST <= 1'b1;
         PE_SEL <= 2'b00;
         WRADDR_START <= 1'b0;
-        INSTR_DONE <= 1'b0;
+        //INSTR_DONE <= 1'b0;
         STOP_SIGNAL <= 1'b0;
         DIMEN <= 2'b00;
-        MAT_MUX <= 1'b0;
-        WRITE_MAT <= 1'b0;
-        RST_ADD <= 1'b1;
-        OUT_READY <= 1'b0;
+        MAT_MUX <= 4'b0000;
+        WRITE_MAT <= 4'b0000;
+        RST_ADD <= 4'b1111;
+        OUT_READY <= 4'b0000;
         ADDRESS <= 4'd0;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
@@ -82,13 +81,13 @@ always_ff @( posedge CLK ) begin
         ADDR_RST <= 1'b0;
         PE_SEL <= 2'b00;
         WRADDR_START <= 1'b0;
-        INSTR_DONE <= 1'b0;
+        //INSTR_DONE <= 1'b0;
         STOP_SIGNAL <= 1'b0;
         DIMEN <= 2'b00;
-        MAT_MUX <= 1'b0;
-        WRITE_MAT <= 1'b0;
-        RST_ADD <= 1'b0;
-        OUT_READY <= 1'b0;
+        MAT_MUX <= 4'b0000;
+        WRITE_MAT <= 4'b0000;
+        RST_ADD <= 4'b0000;
+        OUT_READY <= 4'b0000;
         ADDRESS <= 4'd0;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
@@ -96,7 +95,7 @@ always_ff @( posedge CLK ) begin
         unique case (STATE)
             IDLE:begin
                 STATE <= (START_SIGNAL) ? FETCH : IDLE;
-                INSTR_DONE <= 1'b1;
+                //INSTR_DONE <= 1'b1;
             end
 
             FETCH: begin
@@ -109,9 +108,9 @@ always_ff @( posedge CLK ) begin
             end
 
             LOADA: begin
-                WRITE_MAT <= 1'b1;
-                MAT_MUX <= 1'b1;
-                RST_ADD <= (FETCH_DONE) ? 1'b1 : 1'b0;
+                WRITE_MAT <= 4'b1111;
+                MAT_MUX <= 4'b1111;
+                RST_ADD <= (FETCH_DONE) ? 4'b1111 : 4'b0000;
                 
                 DIMEN <= INSTR[4:3];
                 ADDR_START <= (FETCH_DONE) ? 1'b0 : 1'b1;
@@ -121,14 +120,14 @@ always_ff @( posedge CLK ) begin
                 PE_SEL_2x2 <= INSTR[13];
 
                 STATE <= (FETCH_DONE) ? FETCH : LOADA;
-                INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
+                //INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
 
             end
 
             LOADB: begin
-                WRITE_MAT <= 1'b1;
-                MAT_MUX <= 1'b0;
-                RST_ADD <= (FETCH_DONE) ? 1'b1 : 1'b0;
+                WRITE_MAT <= 4'b1111;
+                MAT_MUX <= 4'b0000;
+                RST_ADD <= (FETCH_DONE) ? 4'b1111 : 4'b0000;
                 
                 DIMEN <= INSTR[4:3];
                 ADDR_START <= (FETCH_DONE) ? 1'b0 : 1'b1;
@@ -139,15 +138,15 @@ always_ff @( posedge CLK ) begin
                 PE_SEL_4 <= INSTR[14];
 
                 STATE <= (FETCH_DONE) ? FETCH : LOADB;
-                INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
+                //INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
             end
 
             MULTACC: begin
-                MAC_CTRL <= (MAC_DONE) ? 4'b1111 : 4'b0000;
+                MAC_CTRL <= (MAC_DONE) ? 4'b0000 : 4'b1111;
                 DIMEN <= INSTR[4:3];
 
                 STATE <= (MAC_DONE) ? FETCH : MULTACC;
-                INSTR_DONE <= (MAC_DONE) ? 1'b1 : 1'b0;
+                //INSTR_DONE <= (MAC_DONE) ? 1'b1 : 1'b0;
             end
 
             STORE: begin
@@ -160,12 +159,12 @@ always_ff @( posedge CLK ) begin
                 WRADDR_START <= 1'b1;
 
                 STATE <= (STORE_DONE) ? FETCH : STORE;
-                INSTR_DONE <= (STORE_DONE) ? 1'b1 : 1'b0;
+                //INSTR_DONE <= (STORE_DONE) ? 1'b1 : 1'b0;
             end
 
             STOP: begin
                 STOP_SIGNAL <= 1'b1;
-                STATE <= STOP;
+                STATE <= STOP; //add two stop instructions
             end
 
         endcase

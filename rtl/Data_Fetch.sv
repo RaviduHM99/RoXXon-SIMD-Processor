@@ -66,7 +66,7 @@ module Data_Fetch(
 
     assign addrb = ADDRESS + ADDR;
     assign dinb = (WRADDR_START) ? DATA_PE_OUT : 32'd0;
-    assign DATA_PE_IN = doutb; 
+    assign DATA_PE_IN = (ADDR_START) ? doutb : 32'dz; 
     assign enb = 1'b1; 
     assign web = (WRADDR_START) ? 3'b111 : 3'b0; // store check web datasheet
 

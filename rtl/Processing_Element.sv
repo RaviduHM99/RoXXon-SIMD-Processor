@@ -41,11 +41,11 @@ module Processing_Element #(
 
     always_ff @( posedge CLK ) begin 
         if (RST_ADD) ADDR <= 'd0;
-        else ADDR <= (WRITE_MAT) ? ADDR + 1'd1 : ADDR;
+        else ADDR <= (WRITE_MAT & ~WRITE_DONE) ? ADDR + 1'd1 : ADDR;
     end
 
     always @(posedge CLK) begin
-        if (WRITE_MAT) begin
+        if (WRITE_MAT & ~WRITE_DONE) begin
             MATA[ADDR] <= (MAT_MUX) ? DATAIN : MATA[ADDR];
             MATB[ADDR] <= (MAT_MUX) ? MATB[ADDR] : DATAIN;
         end
@@ -67,23 +67,28 @@ module Processing_Element #(
     
     assign DATAOUT = (OUT_READY) ? ACC_DATA : 32'dz;
 
+    logic WRITE_DONE;
     always_comb begin
         unique case (DIMEN)
             2'd0 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd1) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd1) ? 1'b1 : 1'b0;
             end
             2'd1 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd3) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
             end
             2'd2 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd7) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd7) ? 1'b1 : 1'b0;
             end
             2'd3 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd15) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd15) ? 1'b1 : 1'b0;
             end      
         endcase
     end
