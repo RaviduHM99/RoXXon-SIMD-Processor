@@ -36,7 +36,7 @@ module Data_Fetch(
     logic ADDR_INC;
     always @(posedge CLK) begin
         if (ADDR_RST) ADDR <= 'b0;
-        else ADDR <= (ADDR_INC) ? ADDR + 'b1 : ADDR;
+        else ADDR <= (ADDR_INC) ? ADDR + 'b1 : ADDR; /////Clock Latency from BRAM
     end
 
     always_comb begin
@@ -65,13 +65,10 @@ module Data_Fetch(
     logic [31:0] DATA_PE_OUT;
 
     assign addrb = ADDRESS + ADDR;
-    assign dinb = (WRADDR_START) ? DATA_PE_OUT : 32'd0; // store
-    assign DATA_PE_IN = doutb; // to PE
-    assign enb = 1'b1; // store or get
+    assign dinb = (WRADDR_START) ? DATA_PE_OUT : 32'd0;
+    assign DATA_PE_IN = doutb; 
+    assign enb = 1'b1; 
     assign web = (WRADDR_START) ? 3'b111 : 3'b0; // store check web datasheet
-
-    logic PE_SEL_B;
-    assign PE_SEL_B = {PE_SEL_4,PE_SEL_2x2};
 
     always_comb begin
         unique case (PE_SEL)
@@ -107,7 +104,7 @@ module Data_Fetch(
                     PE_DIN_3 = DATA_PE_IN;
                 end
             end
-            2'd2: begin
+            2'd2: begin // 2x2 LOADA
                 if (PE_SEL_2x2) begin
                     PE_DIN_0 = DATA_PE_IN;
                     PE_DIN_1 = DATA_PE_IN;
@@ -121,7 +118,7 @@ module Data_Fetch(
                     PE_DIN_3 = DATA_PE_IN;
                 end 
             end
-            2'd3: begin
+            2'd3: begin  // 2x2 LOADB
                 if (PE_SEL_2x2) begin
                     PE_DIN_0 = DATA_PE_IN;
                     PE_DIN_1 = 32'dz;
@@ -141,7 +138,7 @@ module Data_Fetch(
     assign STORE_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
 
     always_comb begin
-        unique case (PE_SEL)
+        unique case (PE_SEL) //This is a problem now need 4 instructions of STORE
             2'd0 : DATA_PE_OUT = PE_DOUT_0;
             2'd1 : DATA_PE_OUT = PE_DOUT_1;
             2'd2 : DATA_PE_OUT = PE_DOUT_2;

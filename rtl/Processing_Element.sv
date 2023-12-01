@@ -8,14 +8,14 @@ module Processing_Element #(
 
     input logic RST_ADD,
     input logic [31:0] DATAIN,
-    
+
     input logic MAC_CTRL,
     input logic RST_ACC,
     input logic RST_PC,
 
     input logic MAT_MUX,
     input logic WRITE_MAT,
-    input logic DIMEN,
+    input logic [1:0] DIMEN,
     input logic OUT_READY,
 
     output logic MAC_DONE,

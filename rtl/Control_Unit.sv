@@ -3,9 +3,9 @@
 module Control_Unit(
     input logic CLK, RSTN,
 
-    input logic [31:0] INSTR, // INST FETCH // remmeber to add end instruction
+    input logic [31:0] INSTR, // INST FETCH
     output logic PC_INCR,
-    output logic INSTR_DONE, //Until done hold instruction
+    output logic INSTR_DONE, 
 
     output logic [3:0] RST_ADD, // PE
     output logic [3:0] MAC_CTRL,
@@ -14,7 +14,7 @@ module Control_Unit(
     output logic [3:0] MAT_MUX,
     output logic [3:0] WRITE_MAT,
     output logic [3:0] OUT_READY,
-    input logic MAC_DONE,
+    input logic MAC_DONE, //AND All MAC DONE in top module
 
     output logic [1:0] DIMEN, // DATA FETCH LOAD
     output logic ADDR_START,
@@ -52,11 +52,12 @@ end
 
 always_ff @( posedge CLK ) begin 
     if (RSTN) begin
+        STATE <= IDLE;
         MAC_CTRL <= 4'b0000;
         PC_INCR <= 1'b0;
         RST_ACC <= 4'b1111;
         RST_PC <= 4'b1111;
-        ADDR_START <= 1'b1; 
+        ADDR_START <= 1'b0; 
         ADDR_RST <= 1'b1;
         PE_SEL <= 2'b00;
         WRADDR_START <= 1'b0;
@@ -95,6 +96,7 @@ always_ff @( posedge CLK ) begin
         unique case (STATE)
             IDLE:begin
                 STATE <= (START_SIGNAL) ? FETCH : IDLE;
+                INSTR_DONE <= 1'b1;
             end
 
             FETCH: begin
@@ -150,7 +152,7 @@ always_ff @( posedge CLK ) begin
 
             STORE: begin
                 DIMEN <= INSTR[4:3];
-                OUT_READY <= (INSTR[6]) ? 4'b1111 : 4'b1100;
+                OUT_READY <= 4'b1111;
                 
                 ADDR_START <= (STORE_DONE) ? 1'b0 : 1'b1;
                 ADDR_RST <= (STORE_DONE) ? 1'b1 : 1'b0;
