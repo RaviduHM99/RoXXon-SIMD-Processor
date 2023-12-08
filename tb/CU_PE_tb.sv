@@ -57,7 +57,8 @@ module CU_PE_tb;
         DATAIN[2] <= 32'dz; 
         DATAIN[3] <= 32'dz; 
 
-        #(CLK_PERIOD) 
+//////////// 2x2 Matrix Multiplication //////////// 
+        #(CLK_PERIOD)  //LOAD A row 1 element 1
         RSTN <= 0; 
         INSTR <= 32'b010010100100010; 
         FETCH_DONE <= 1'b0;
@@ -75,23 +76,16 @@ module CU_PE_tb;
         DATAIN[2] <= 32'dz; 
         DATAIN[3] <= 32'dz; 
 
-        #(CLK_PERIOD) 
+        #(CLK_PERIOD) //LOAD A row 1 element 2
         RSTN <= 0; 
-        INSTR <= 32'b000010100100010;
+        INSTR <= 32'b010010100100010; 
         FETCH_DONE <= 1'b1;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b000010100100010;
-        FETCH_DONE <= 1'b0;
-        STORE_DONE <= 1'b0;
-        START_SIGNAL <= 1'b1;
-
-        #(CLK_PERIOD) 
-        RSTN <= 0; 
-        INSTR <= 32'b000010100100010;
+        INSTR <= 32'b010010100100010; 
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
@@ -107,10 +101,17 @@ module CU_PE_tb;
         DATAIN[2] <= 32'd78; 
         DATAIN[3] <= 32'd78; 
 
+        #(CLK_PERIOD) //LOAD A row 2 element 1
+        RSTN <= 0; 
+        INSTR <= 32'b000010100000010;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b010010110000011;
-        FETCH_DONE <= 1'b1;
+        INSTR <= 32'b000010100000010;
+        FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
 
@@ -125,6 +126,130 @@ module CU_PE_tb;
         DATAIN[2] <= 32'd0;
         DATAIN[3] <= 32'd42;
 
+        #(CLK_PERIOD) //LOAD A row 2 element 2
+        RSTN <= 0; 
+        INSTR <= 32'b000010100000010;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b000010100000010;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd93;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd93;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd14;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd14; 
+
+        #(CLK_PERIOD) //LOAD B row 1 element 1
+        RSTN <= 0; 
+        INSTR <= 32'b010010110000011;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b010010110000011;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD*2) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd56;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd56;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd42;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd42;
+
+        #(CLK_PERIOD) //LOAD B row 1 element 2
+        RSTN <= 0; 
+        INSTR <= 32'b010010110000011;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b010010110000011;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd93;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd93;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd14;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd14;
+
+        #(CLK_PERIOD) //LOAD B row 2 element 1
+        RSTN <= 0; 
+        INSTR <= 32'b000010110000011;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b000010110000011;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD*2) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd56;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd56;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd42;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd42;
+
+        #(CLK_PERIOD) //LOAD B row 2 element 2
+        RSTN <= 0; 
+        INSTR <= 32'b000010110000011;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b000010110000011;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd93;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd93;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd14;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd14;
         #(CLK_PERIOD*3)
         $finish();
     end

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 module CU_Instr_Wrapper #(
-    parameter N = 256
+    parameter N = 512
 ) (
     input logic CLK, RSTN,
 

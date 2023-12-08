@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 module Processing_Element #(
-    parameter N = 16
+    parameter N = 32
 )
 (
     input logic CLK,
@@ -27,13 +27,15 @@ module Processing_Element #(
     reg [31:0] ACC_DATA;
     reg [$clog2(N)-1:0] PC;
     reg [$clog2(N)-1:0] ADDR;
+    logic WRITE_DONE;
+    logic INC_PC;
+    wire [31:0] MUL_DATA;
 
     initial begin
         MATA[0] <= 'd0; MATA[1] <= 'd0; MATA[2] <= 'd0; MATA[3] <= 'd0; MATA[4] <= 'd0; MATA[5] <= 'd0; MATA[6] <= 'd0; MATA[7] <= 'd0; MATA[8] <= 'd0; MATA[9] <= 'd0; MATA[10] <= 'd0; MATA[11] <= 'd0; MATA[12] <= 'd0; MATA[13] <= 'd0; MATA[14] <= 'd0; MATA[15] <= 'd0;
         MATB[0] <= 'd0; MATB[1] <= 'd0; MATB[2] <= 'd0; MATB[3] <= 'd0; MATB[4] <= 'd0; MATB[5] <= 'd0; MATB[6] <= 'd0; MATB[7] <= 'd0; MATB[8] <= 'd0; MATB[9] <= 'd0; MATB[10] <= 'd0; MATB[11] <= 'd0; MATB[12] <= 'd0; MATB[13] <= 'd0; MATB[14] <= 'd0; MATB[15] <= 'd0;
     end
 
-    logic INC_PC;
     always @(posedge CLK) begin
         if (RST_PC) PC <= 'b0;
         else PC <= (INC_PC) ? PC + 'b1 : PC;
@@ -56,7 +58,6 @@ module Processing_Element #(
     end
   
     ///// MAC Module /////
-    wire [31:0] MUL_DATA;
 
     assign MUL_DATA = (MAC_CTRL) ? MATA[PC]*MATB[PC] : 'd0;
 
@@ -65,30 +66,29 @@ module Processing_Element #(
         else ACC_DATA <= (MAC_CTRL) ? ACC_DATA + MUL_DATA : ACC_DATA;
     end
     
-    assign DATAOUT = (OUT_READY) ? ACC_DATA : 32'dz;
+    assign DATAOUT = (OUT_READY) ? ACC_DATA : 32'd0;
 
-    logic WRITE_DONE;
     always_comb begin
         unique case (DIMEN)
             2'd0 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
-                MAC_DONE = (PC == 4'd1) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd2) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 32'd2) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 32'd2) ? 1'b1 : 1'b0;
             end
             2'd1 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
-                MAC_DONE = (PC == 4'd3) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd4) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 32'd4) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 32'd4) ? 1'b1 : 1'b0;
             end
             2'd2 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
-                MAC_DONE = (PC == 4'd7) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd8) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 32'd8) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 32'd8) ? 1'b1 : 1'b0;
             end
             2'd3 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
-                MAC_DONE = (PC == 4'd15) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd16) ? 1'b1 : 1'b0;
+                MAC_DONE = (PC == 32'd16) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 32'd16) ? 1'b1 : 1'b0;
             end      
         endcase
     end

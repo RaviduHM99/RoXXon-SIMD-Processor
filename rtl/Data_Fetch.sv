@@ -13,7 +13,7 @@ module Data_Fetch(
     input logic [1:0] DIMEN, // DATA FETCH LOAD
     input logic ADDR_START,
     input logic ADDR_RST,
-    input logic [3:0] ADDRESS,
+    input logic [16:0] ADDRESS,
     output logic FETCH_DONE,
     input logic [1:0] PE_SEL,
     input logic PE_SEL_2x2,
@@ -42,21 +42,21 @@ module Data_Fetch(
 
     always_comb begin
         unique case (DIMEN)
-            2'd0 : begin
+            2'd0 : begin //2x2
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd2) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 32'd2 & ~WRADDR_START) ? 1'b1 : 1'b0;
             end
-            2'd1 : begin
+            2'd1 : begin //4x4
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd4) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 32'd4 & ~WRADDR_START) ? 1'b1 : 1'b0;
+            end 
+            2'd2 : begin //8x8
+                ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 32'd8 & ~WRADDR_START) ? 1'b1 : 1'b0;
             end
-            2'd2 : begin
+            2'd3 : begin //16x16, 32x32, ....
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd8) ? 1'b1 : 1'b0;
-            end
-            2'd3 : begin
-                ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd16) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 32'd16 & ~WRADDR_START) ? 1'b1 : 1'b0;
             end 
         endcase
 
@@ -136,7 +136,7 @@ module Data_Fetch(
         endcase
     end
 
-    assign STORE_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
+    assign STORE_DONE = (ADDR == 32'd3) ? 1'b1 : 1'b0;
     assign DATA_PE_OUT = {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
 /*
     always_ff @( posedge CLK ) begin 

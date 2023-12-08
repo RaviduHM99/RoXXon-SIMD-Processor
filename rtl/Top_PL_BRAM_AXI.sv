@@ -1,22 +1,22 @@
 `timescale 1ns/1ps
 
-module Top_PL #(
+module Top_PL_BRAM_AXI #(
     parameter N = 512
 )(
     input logic CLK, RSTN,
     
-    output logic [31:0] addrb, // BRAM Ports
-    output logic [31:0] dinb,
-    input logic [31:0] doutb,
-    output logic enb,
-    output logic [3:0] web,
-
-    input logic [31:0] INSTR_AXI,
-    output logic [$clog2(N)-1:0] PC_AXI,
-
     input logic START_SIGNAL, //GPIO
     output logic STOP_SIGNAL
 );
+
+    wire [31:0] addrb; // BRAM Ports
+    wire [31:0] dinb;
+    wire [31:0] doutb;
+    wire enb;
+    wire [3:0] web;
+
+    wire [31:0] INSTR_AXI;
+    wire [$clog2(N)-1:0] PC_AXI;
 
     wire [3:0] RST_ADD; // PE
     wire [3:0] MAC_CTRL;
@@ -60,6 +60,8 @@ module Top_PL #(
     Control_Unit CU (.*);
     Data_Fetch DF (.*);
     Instr_Fetch IF (.*);
+    BRAM_RF BRF (.*);
+    Instruction_RF IRF (.*);
 
     Processing_Element PE0 (
         .CLK(CLK),

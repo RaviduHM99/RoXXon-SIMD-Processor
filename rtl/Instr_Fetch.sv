@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 module Instr_Fetch #(
-    parameter N = 256
+    parameter N = 512
 )(
     input logic CLK, RSTN,
 

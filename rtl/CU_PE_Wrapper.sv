@@ -37,13 +37,11 @@ module CU_PE_Wrapper (
     logic [3:0] MAC_DONE_PE; //AND All MAC DONE in top module
     logic MAC_DONE;
 
-    localparam N = 16;
-
     assign MAC_DONE = MAC_DONE_PE[0] & MAC_DONE_PE[1] & MAC_DONE_PE[2] & MAC_DONE_PE[3];
 
     Control_Unit CU (.*);
 
-    Processing_Element #(.N(N)) PE0 (
+    Processing_Element PE0 (
         .CLK(CLK),
         .RST_ADD(RST_ADD[0]),
         .DATAIN(DATAIN[0]),
@@ -58,7 +56,7 @@ module CU_PE_Wrapper (
         .DATAOUT(DATAOUT[0])
         );
 
-    Processing_Element #(.N(N)) PE1 (
+    Processing_Element PE1 (
         .CLK(CLK),
         .RST_ADD(RST_ADD[1]),
         .DATAIN(DATAIN[1]),
@@ -73,7 +71,7 @@ module CU_PE_Wrapper (
         .DATAOUT(DATAOUT[1])
         );
 
-    Processing_Element #(.N(N)) PE2 (
+    Processing_Element PE2 (
         .CLK(CLK),
         .RST_ADD(RST_ADD[2]),
         .DATAIN(DATAIN[2]),
@@ -88,7 +86,7 @@ module CU_PE_Wrapper (
         .DATAOUT(DATAOUT[2])
         );
 
-    Processing_Element #(.N(N)) PE3 (
+    Processing_Element PE3 (
         .CLK(CLK),
         .RST_ADD(RST_ADD[3]),
         .DATAIN(DATAIN[3]),

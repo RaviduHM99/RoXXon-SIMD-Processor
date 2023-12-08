@@ -19,7 +19,7 @@ module Control_Unit(
     output logic [1:0] DIMEN, // DATA FETCH LOAD
     output logic ADDR_START,
     output logic ADDR_RST,
-    output logic [3:0] ADDRESS,
+    output logic [16:0] ADDRESS,
     input logic FETCH_DONE,
     output logic [1:0] PE_SEL,
     output logic PE_SEL_2x2,
@@ -67,7 +67,7 @@ always_ff @( posedge CLK ) begin
         WRITE_MAT <= 4'b0000;
         RST_ADD <= 4'b1111;
         OUT_READY <= 4'b0000;
-        ADDRESS <= 4'd0;
+        ADDRESS <= 17'd0;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
     end
@@ -88,7 +88,7 @@ always_ff @( posedge CLK ) begin
         WRITE_MAT <= 4'b0000;
         RST_ADD <= 4'b0000;
         OUT_READY <= 4'b0000;
-        ADDRESS <= 4'd0;
+        ADDRESS <= 17'd0;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
         
@@ -103,8 +103,8 @@ always_ff @( posedge CLK ) begin
                 DIMEN <= INSTR[4:3];
                 PC_INCR <= 1'b1;
 
-                RST_ACC <= (INSTR[5]) ? 4'b1111 : 4'b0000;
-                RST_PC <= (INSTR[5]) ? 4'b1111 : 4'b0000;
+                RST_ACC <= (INSTR[5]) ? 4'b1111 : 4'b0000; /// 32x32
+                //RST_PC <= (INSTR[5]) ? 4'b1111 : 4'b0000; /// 32x32 reset PC not sure check this
             end
 
             LOADA: begin
@@ -125,7 +125,7 @@ always_ff @( posedge CLK ) begin
                 DIMEN <= INSTR[4:3];
                 ADDR_START <= (FETCH_DONE) ? 1'b0 : 1'b1;
                 ADDR_RST <= (FETCH_DONE) ? 1'b1 : 1'b0;
-                ADDRESS <= INSTR[12:9];
+                ADDRESS <= INSTR[31:15];
                 PE_SEL <= INSTR[8:7];
                 PE_SEL_2x2 <= INSTR[13];
 
@@ -134,7 +134,7 @@ always_ff @( posedge CLK ) begin
 
             end
 
-            LOADB: begin
+            LOADB: begin 
 
                 if (INSTR[8:7] == 2'd1)begin
                     if (~PE_SEL_4 & ~PE_SEL_2x2) WRITE_MAT <= 4'b0001;
@@ -152,7 +152,7 @@ always_ff @( posedge CLK ) begin
                 DIMEN <= INSTR[4:3];
                 ADDR_START <= (FETCH_DONE) ? 1'b0 : 1'b1;
                 ADDR_RST <= (FETCH_DONE) ? 1'b1 : 1'b0;
-                ADDRESS <= INSTR[12:9];
+                ADDRESS <= INSTR[31:15];
                 PE_SEL <= INSTR[8:7];
                 PE_SEL_2x2 <= INSTR[13];
                 PE_SEL_4 <= INSTR[14];
@@ -166,6 +166,7 @@ always_ff @( posedge CLK ) begin
                 DIMEN <= INSTR[4:3];
 
                 STATE <= (MAC_DONE) ? FETCH : MULTACC;
+                RST_PC <= (MAC_DONE) ? 4'b1111 : 4'b0000;
                 //INSTR_DONE <= (MAC_DONE) ? 1'b1 : 1'b0;
             end
 
@@ -175,7 +176,7 @@ always_ff @( posedge CLK ) begin
                 
                 ADDR_START <= (STORE_DONE) ? 1'b0 : 1'b1;
                 ADDR_RST <= (STORE_DONE) ? 1'b1 : 1'b0;
-                ADDRESS <= INSTR[12:9];
+                ADDRESS <= INSTR[31:15];
                 WRADDR_START <= 1'b1;
 
                 STATE <= (STORE_DONE) ? FETCH : STORE;
