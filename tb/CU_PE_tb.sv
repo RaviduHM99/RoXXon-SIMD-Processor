@@ -59,7 +59,7 @@ module CU_PE_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b01010100100010; 
+        INSTR <= 32'b010010100100010; 
         FETCH_DONE <= 1'b0;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
@@ -77,10 +77,53 @@ module CU_PE_tb;
 
         #(CLK_PERIOD) 
         RSTN <= 0; 
-        INSTR <= 32'b00010100100010;
+        INSTR <= 32'b000010100100010;
         FETCH_DONE <= 1'b1;
         STORE_DONE <= 1'b0;
         START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b000010100100010;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b000010100100010;
+        FETCH_DONE <= 1'b0;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd0;
+        DATAIN[2] <= 32'd56;
+        DATAIN[3] <= 32'd56;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd0;
+        DATAIN[2] <= 32'd78; 
+        DATAIN[3] <= 32'd78; 
+
+        #(CLK_PERIOD) 
+        RSTN <= 0; 
+        INSTR <= 32'b010010110000011;
+        FETCH_DONE <= 1'b1;
+        STORE_DONE <= 1'b0;
+        START_SIGNAL <= 1'b1;
+
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd56;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd56;
+        #(CLK_PERIOD) 
+        DATAIN[0] <= 32'd0;
+        DATAIN[1] <= 32'd42;
+        DATAIN[2] <= 32'd0;
+        DATAIN[3] <= 32'd42;
 
         #(CLK_PERIOD*3)
         $finish();

@@ -2,6 +2,7 @@
 
 module Data_Fetch(
     input logic CLK,
+    //input logic RSTN,
 
     output logic [31:0] addrb, // BRAM Ports
     output logic [31:0] dinb,
@@ -43,30 +44,30 @@ module Data_Fetch(
         unique case (DIMEN)
             2'd0 : begin
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd1) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 4'd2) ? 1'b1 : 1'b0;
             end
             2'd1 : begin
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 4'd4) ? 1'b1 : 1'b0;
             end
             2'd2 : begin
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd7) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 4'd8) ? 1'b1 : 1'b0;
             end
             2'd3 : begin
                 ADDR_INC = (ADDR_START) ? 1'b1 : 1'b0;
-                FETCH_DONE = (ADDR == 4'd15) ? 1'b1 : 1'b0;
+                FETCH_DONE = (ADDR == 4'd16) ? 1'b1 : 1'b0;
             end 
         endcase
 
     end
 
     logic [31:0] DATA_PE_IN;
-    logic [31:0] DATA_PE_OUT;
+    logic [3:0][31:0] DATA_PE_OUT;
 
     assign addrb = ADDRESS + ADDR;
-    assign dinb = (WRADDR_START) ? DATA_PE_OUT : 32'd0;
-    assign DATA_PE_IN = (ADDR_START) ? doutb : 32'dz; 
+    assign dinb = (WRADDR_START) ? DATA_PE_OUT[ADDR] : 32'd0;
+    assign DATA_PE_IN = (ADDR_START) ? doutb : 32'd0; 
     assign enb = 1'b1; 
     assign web = (WRADDR_START) ? 3'b111 : 3'b0; // store check web datasheet
 
@@ -81,26 +82,26 @@ module Data_Fetch(
             2'd1: begin
                 if (~PE_SEL_4 & ~PE_SEL_2x2) begin
                     PE_DIN_0 = DATA_PE_IN;
-                    PE_DIN_1 = 32'dz;
-                    PE_DIN_2 = 32'dz;
-                    PE_DIN_3 = 32'dz;
+                    PE_DIN_1 = 32'd0;
+                    PE_DIN_2 = 32'd0;
+                    PE_DIN_3 = 32'd0;
                 end
                 else if  (~PE_SEL_4 & PE_SEL_2x2)  begin
-                    PE_DIN_0 = 32'dz;
+                    PE_DIN_0 = 32'd0;
                     PE_DIN_1 = DATA_PE_IN;
-                    PE_DIN_2 = 32'dz;
-                    PE_DIN_3 = 32'dz;
+                    PE_DIN_2 = 32'd0;
+                    PE_DIN_3 = 32'd0;
                 end
                 else if  (PE_SEL_4 & ~PE_SEL_2x2)  begin
-                    PE_DIN_0 = 32'dz;
-                    PE_DIN_1 = 32'dz;
+                    PE_DIN_0 = 32'd0;
+                    PE_DIN_1 = 32'd0;
                     PE_DIN_2 = DATA_PE_IN;
-                    PE_DIN_3 = 32'dz;
+                    PE_DIN_3 = 32'd0;
                 end
                 else begin
-                    PE_DIN_0 = 32'dz;
-                    PE_DIN_1 = 32'dz;
-                    PE_DIN_2 = 32'dz;
+                    PE_DIN_0 = 32'd0;
+                    PE_DIN_1 = 32'd0;
+                    PE_DIN_2 = 32'd0;
                     PE_DIN_3 = DATA_PE_IN;
                 end
             end
@@ -108,12 +109,12 @@ module Data_Fetch(
                 if (PE_SEL_2x2) begin
                     PE_DIN_0 = DATA_PE_IN;
                     PE_DIN_1 = DATA_PE_IN;
-                    PE_DIN_2 = 32'dz;
-                    PE_DIN_3 = 32'dz;
+                    PE_DIN_2 = 32'd0;
+                    PE_DIN_3 = 32'd0;
                 end
                 else begin
-                    PE_DIN_0 = 32'dz;
-                    PE_DIN_1 = 32'dz;
+                    PE_DIN_0 = 32'd0;
+                    PE_DIN_1 = 32'd0;
                     PE_DIN_2 = DATA_PE_IN;
                     PE_DIN_3 = DATA_PE_IN;
                 end 
@@ -121,14 +122,14 @@ module Data_Fetch(
             2'd3: begin  // 2x2 LOADB
                 if (PE_SEL_2x2) begin
                     PE_DIN_0 = DATA_PE_IN;
-                    PE_DIN_1 = 32'dz;
+                    PE_DIN_1 = 32'd0;
                     PE_DIN_2 = DATA_PE_IN;
-                    PE_DIN_3 = 32'dz;
+                    PE_DIN_3 = 32'd0;
                 end 
                 else begin
-                    PE_DIN_0 = 32'dz;
+                    PE_DIN_0 = 32'd0;
                     PE_DIN_1 = DATA_PE_IN;
-                    PE_DIN_2 = 32'dz;
+                    PE_DIN_2 = 32'd0;
                     PE_DIN_3 = DATA_PE_IN;
                 end
             end
@@ -136,7 +137,14 @@ module Data_Fetch(
     end
 
     assign STORE_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
-
+    assign DATA_PE_OUT = {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
+/*
+    always_ff @( posedge CLK ) begin 
+        if (RSTN) DATA_PE_OUT <= {4{32'd0}};
+        else DATA_PE_OUT <= {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
+    end*/
+    
+    /*
     always_comb begin
         unique case (PE_SEL) //This is a problem now need 4 instructions of STORE
             2'd0 : DATA_PE_OUT = PE_DOUT_0;
@@ -144,6 +152,6 @@ module Data_Fetch(
             2'd2 : DATA_PE_OUT = PE_DOUT_2;
             2'd3 : DATA_PE_OUT = PE_DOUT_3;
         endcase
-    end
+    end */
 
 endmodule

@@ -73,22 +73,22 @@ module Processing_Element #(
             2'd0 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd1) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd1) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd2) ? 1'b1 : 1'b0;
             end
             2'd1 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd3) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd3) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd4) ? 1'b1 : 1'b0;
             end
             2'd2 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd7) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd7) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd8) ? 1'b1 : 1'b0;
             end
             2'd3 : begin
                 INC_PC = (MAC_CTRL) ? 1'b1 : 1'b0;
                 MAC_DONE = (PC == 4'd15) ? 1'b1 : 1'b0;
-                WRITE_DONE = (ADDR == 4'd15) ? 1'b1 : 1'b0;
+                WRITE_DONE = (ADDR == 4'd16) ? 1'b1 : 1'b0;
             end      
         endcase
     end

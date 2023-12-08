@@ -47,7 +47,7 @@ always_comb begin
     endcase
 end
 
-assign INSTR_DONE = ((STATE == IDLE) | FETCH_DONE | MAC_DONE | STORE_DONE) ? 1'b1 : 1'b0;
+assign INSTR_DONE = ((STATE == IDLE & START_SIGNAL) | FETCH_DONE | MAC_DONE | STORE_DONE) ? 1'b1 : 1'b0;
 
 always_ff @( posedge CLK ) begin 
     if (RSTN) begin
@@ -108,7 +108,17 @@ always_ff @( posedge CLK ) begin
             end
 
             LOADA: begin
-                WRITE_MAT <= 4'b1111;
+                
+                if (INSTR[8:7] == 2'd0) WRITE_MAT <= 4'b1111;
+                else if (INSTR[8:7] == 2'd2) WRITE_MAT <= (INSTR[13]) ? 4'b0011 : 4'b1100;
+                else if (INSTR[8:7] == 2'd1)begin
+                    if (~PE_SEL_4 & ~PE_SEL_2x2) WRITE_MAT <= 4'b0001;
+                    else if  (~PE_SEL_4 & PE_SEL_2x2) WRITE_MAT <= 4'b0010;
+                    else if  (PE_SEL_4 & ~PE_SEL_2x2) WRITE_MAT <= 4'b0100;
+                    else WRITE_MAT <= 4'b1000;
+                end
+                else WRITE_MAT <= (INSTR[13]) ? 4'b0101 : 4'b1010;
+
                 MAT_MUX <= 4'b1111;
                 RST_ADD <= (FETCH_DONE) ? 4'b1111 : 4'b0000;
                 
@@ -125,7 +135,17 @@ always_ff @( posedge CLK ) begin
             end
 
             LOADB: begin
-                WRITE_MAT <= 4'b1111;
+
+                if (INSTR[8:7] == 2'd1)begin
+                    if (~PE_SEL_4 & ~PE_SEL_2x2) WRITE_MAT <= 4'b0001;
+                    else if  (~PE_SEL_4 & PE_SEL_2x2) WRITE_MAT <= 4'b0010;
+                    else if  (PE_SEL_4 & ~PE_SEL_2x2) WRITE_MAT <= 4'b0100;
+                    else WRITE_MAT <= 4'b1000;
+                end
+                else if (INSTR[8:7] == 2'd3) WRITE_MAT <= (INSTR[13]) ? 4'b0101 : 4'b1010;
+                else if (INSTR[8:7] == 2'd0) WRITE_MAT <= 4'b1111;
+                else WRITE_MAT <= (INSTR[13]) ? 4'b0011 : 4'b1100;
+
                 MAT_MUX <= 4'b0000;
                 RST_ADD <= (FETCH_DONE) ? 4'b1111 : 4'b0000;
                 
