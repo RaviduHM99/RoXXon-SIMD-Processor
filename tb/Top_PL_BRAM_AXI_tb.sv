@@ -21,12 +21,10 @@ module Top_PL_BRAM_AXI_tb;
         START_SIGNAL <= 1'b0;
 
         #(CLK_PERIOD) 
-        RSTN <= 0; 
+        RSTN <= 0;
+        START_SIGNAL <= 1'b1; 
 
-        #(CLK_PERIOD) 
-        START_SIGNAL <= 1'b1;
-
-        #(CLK_PERIOD*37)
+        #(CLK_PERIOD*250)
         $finish();
     end
     

@@ -88,7 +88,7 @@ always_ff @( posedge CLK ) begin
         WRITE_MAT <= 4'b0000;
         RST_ADD <= 4'b0000;
         OUT_READY <= 4'b0000;
-        ADDRESS <= 17'd0;
+        ADDRESS <= ADDRESS;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
         
@@ -102,9 +102,11 @@ always_ff @( posedge CLK ) begin
                 STATE <= NEXT_STATE;
                 DIMEN <= INSTR[4:3];
                 PC_INCR <= 1'b1;
+                
+                PE_SEL_2x2 <= PE_SEL_2x2; 
+                PE_SEL_4 <= PE_SEL_4; 
 
-                RST_ACC <= (INSTR[5]) ? 4'b1111 : 4'b0000; /// 32x32
-                //RST_PC <= (INSTR[5]) ? 4'b1111 : 4'b0000; /// 32x32 reset PC not sure check this
+                RST_ACC <= (INSTR[5]) ? 4'b1111 : 4'b0000; /// 4x4, 8x8, ..... in LOAD instructions
             end
 
             LOADA: begin
@@ -131,7 +133,6 @@ always_ff @( posedge CLK ) begin
 
                 STATE <= (FETCH_DONE) ? FETCH : LOADA;
                 //INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
-
             end
 
             LOADB: begin 

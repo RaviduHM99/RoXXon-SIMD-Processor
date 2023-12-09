@@ -22,6 +22,8 @@ module Data_Fetch(
     input logic WRADDR_START, // DATA FETCH STORE
     output logic STORE_DONE,
 
+    output logic [2:0] latency_counter, // READ latency for PE
+
     output logic [31:0] PE_DIN_0,
     output logic [31:0] PE_DIN_1,
     output logic [31:0] PE_DIN_2,
@@ -33,11 +35,26 @@ module Data_Fetch(
     input logic [31:0] PE_DOUT_3
 
 );
+
+    reg [2:0] latency_counter_DF;
+    logic latency_rst;
+    logic latency_incr;
     reg [31:0] ADDR;
     logic ADDR_INC;
+
+    assign latency_rst = (latency_counter_DF == 3'd2) ? 1'b1 : 1'b0;
+    assign latency_incr = (ADDR_INC) ? 1'b1 : 1'b0;
+
+    always_ff @( posedge CLK ) begin 
+        if (latency_rst | ADDR_RST) latency_counter_DF <= 'd0;
+        else latency_counter_DF <= (latency_incr) ? latency_counter_DF + 1'd1 : latency_counter_DF;
+    end 
+
+    assign latency_counter = latency_counter_DF;
+
     always @(posedge CLK) begin
         if (ADDR_RST) ADDR <= 'b0;
-        else ADDR <= (ADDR_INC) ? ADDR + 'b1 : ADDR; /////Clock Latency from BRAM
+        else ADDR <= (ADDR_INC & (latency_counter_DF == 3'd2 | WRADDR_START)) ? ADDR + 'b1 : ADDR; /////Clock Latency from BRAM
     end
 
     always_comb begin
@@ -68,8 +85,8 @@ module Data_Fetch(
     assign addrb = ADDRESS + ADDR;
     assign dinb = (WRADDR_START) ? DATA_PE_OUT[ADDR] : 32'd0;
     assign DATA_PE_IN = (ADDR_START) ? doutb : 32'd0; 
-    assign enb = 1'b1; 
-    assign web = (WRADDR_START) ? 3'b111 : 3'b0; // store check web datasheet
+    assign enb = (ADDR_START | WRADDR_START) ? 1'b1 : 1'b0; 
+    assign web = (WRADDR_START) ? 3'b111 : 3'b0; ////// store check web datasheet ///////
 
     always_comb begin
         unique case (PE_SEL)
@@ -136,22 +153,8 @@ module Data_Fetch(
         endcase
     end
 
-    assign STORE_DONE = (ADDR == 32'd3) ? 1'b1 : 1'b0;
+    assign STORE_DONE = (ADDR == 32'd3 & WRADDR_START) ? 1'b1 : 1'b0;
     assign DATA_PE_OUT = {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
-/*
-    always_ff @( posedge CLK ) begin 
-        if (RSTN) DATA_PE_OUT <= {4{32'd0}};
-        else DATA_PE_OUT <= {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
-    end*/
-    
-    /*
-    always_comb begin
-        unique case (PE_SEL) //This is a problem now need 4 instructions of STORE
-            2'd0 : DATA_PE_OUT = PE_DOUT_0;
-            2'd1 : DATA_PE_OUT = PE_DOUT_1;
-            2'd2 : DATA_PE_OUT = PE_DOUT_2;
-            2'd3 : DATA_PE_OUT = PE_DOUT_3;
-        endcase
-    end */
+
 
 endmodule

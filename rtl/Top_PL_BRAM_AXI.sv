@@ -48,6 +48,8 @@ module Top_PL_BRAM_AXI #(
     wire WRADDR_START; // DATA FETCH STORE
     wire STORE_DONE;
 
+    wire [2:0] latency_counter;
+
     wire [31:0] INSTR; //INSTR Module
     wire PC_INCR;
     wire INSTR_DONE;
@@ -65,6 +67,7 @@ module Top_PL_BRAM_AXI #(
 
     Processing_Element PE0 (
         .CLK(CLK),
+        .latency_counter(latency_counter),
         .RST_ADD(RST_ADD[0]),
         .DATAIN(PE_DIN_0),
         .MAC_CTRL(MAC_CTRL[0]),
@@ -80,6 +83,7 @@ module Top_PL_BRAM_AXI #(
 
     Processing_Element PE1 (
         .CLK(CLK),
+        .latency_counter(latency_counter),
         .RST_ADD(RST_ADD[1]),
         .DATAIN(PE_DIN_1),
         .MAC_CTRL(MAC_CTRL[1]),
@@ -95,6 +99,7 @@ module Top_PL_BRAM_AXI #(
 
     Processing_Element PE2 (
         .CLK(CLK),
+        .latency_counter(latency_counter),
         .RST_ADD(RST_ADD[2]),
         .DATAIN(PE_DIN_2),
         .MAC_CTRL(MAC_CTRL[2]),
@@ -110,6 +115,7 @@ module Top_PL_BRAM_AXI #(
 
     Processing_Element PE3 (
         .CLK(CLK),
+        .latency_counter(latency_counter),
         .RST_ADD(RST_ADD[3]),
         .DATAIN(PE_DIN_3),
         .MAC_CTRL(MAC_CTRL[3]),

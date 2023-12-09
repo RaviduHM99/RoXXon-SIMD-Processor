@@ -1,10 +1,12 @@
 `timescale 1ns/1ps
 
 module Processing_Element #(
-    parameter N = 32
+    parameter N = 16
 )
 (
     input logic CLK,
+
+    input logic [2:0] latency_counter,  // READ latency for PE
 
     input logic RST_ADD,
     input logic [31:0] DATAIN,
@@ -36,6 +38,8 @@ module Processing_Element #(
         MATB[0] <= 'd0; MATB[1] <= 'd0; MATB[2] <= 'd0; MATB[3] <= 'd0; MATB[4] <= 'd0; MATB[5] <= 'd0; MATB[6] <= 'd0; MATB[7] <= 'd0; MATB[8] <= 'd0; MATB[9] <= 'd0; MATB[10] <= 'd0; MATB[11] <= 'd0; MATB[12] <= 'd0; MATB[13] <= 'd0; MATB[14] <= 'd0; MATB[15] <= 'd0;
     end
 
+    ///// Store Data /////
+
     always @(posedge CLK) begin
         if (RST_PC) PC <= 'b0;
         else PC <= (INC_PC) ? PC + 'b1 : PC;
@@ -43,11 +47,11 @@ module Processing_Element #(
 
     always_ff @( posedge CLK ) begin 
         if (RST_ADD) ADDR <= 'd0;
-        else ADDR <= (WRITE_MAT & ~WRITE_DONE) ? ADDR + 1'd1 : ADDR;
+        else ADDR <= (WRITE_MAT & ~WRITE_DONE & latency_counter == 3'd2) ? ADDR + 1'd1 : ADDR;
     end
 
     always @(posedge CLK) begin
-        if (WRITE_MAT & ~WRITE_DONE) begin
+        if (WRITE_MAT & ~WRITE_DONE & latency_counter == 3'd2) begin
             MATA[ADDR] <= (MAT_MUX) ? DATAIN : MATA[ADDR];
             MATB[ADDR] <= (MAT_MUX) ? MATB[ADDR] : DATAIN;
         end

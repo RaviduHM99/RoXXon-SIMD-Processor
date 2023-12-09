@@ -1,2 +1,4 @@
 workspace
 waveforms
+blockdesign
+py/*.txt
