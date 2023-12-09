@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="CU_PE_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="CU_PE_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="166.001 ns"></ZoomEndTime>
+      <Cursor1Time time="76.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="136"></NameColumnWidth>
+      <ValueColumnWidth column_width="62"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="40" />
+   <wvobject fp_name="/CU_PE_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/CU/NEXT_STATE" type="array">
+      <obj_property name="ElementShortName">NEXT_STATE[2:0]</obj_property>
+      <obj_property name="ObjectShortName">NEXT_STATE[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/CU/STATE" type="array">
+      <obj_property name="ElementShortName">STATE[2:0]</obj_property>
+      <obj_property name="ObjectShortName">STATE[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/RSTN" type="logic">
+      <obj_property name="ElementShortName">RSTN</obj_property>
+      <obj_property name="ObjectShortName">RSTN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/INSTR" type="array">
+      <obj_property name="ElementShortName">INSTR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">INSTR[31:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/PC_INCR" type="logic">
+      <obj_property name="ElementShortName">PC_INCR</obj_property>
+      <obj_property name="ObjectShortName">PC_INCR</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/INSTR_DONE" type="logic">
+      <obj_property name="ElementShortName">INSTR_DONE</obj_property>
+      <obj_property name="ObjectShortName">INSTR_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/ADDR_START" type="logic">
+      <obj_property name="ElementShortName">ADDR_START</obj_property>
+      <obj_property name="ObjectShortName">ADDR_START</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/ADDR_RST" type="logic">
+      <obj_property name="ElementShortName">ADDR_RST</obj_property>
+      <obj_property name="ObjectShortName">ADDR_RST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/ADDRESS" type="array">
+      <obj_property name="ElementShortName">ADDRESS[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDRESS[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MAC_CTRL" type="logic">
+      <obj_property name="ElementShortName">MAC_CTRL</obj_property>
+      <obj_property name="ObjectShortName">MAC_CTRL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/FETCH_DONE" type="logic">
+      <obj_property name="ElementShortName">FETCH_DONE</obj_property>
+      <obj_property name="ObjectShortName">FETCH_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/PE_SEL" type="array">
+      <obj_property name="ElementShortName">PE_SEL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/PE_SEL_2x2" type="logic">
+      <obj_property name="ElementShortName">PE_SEL_2x2</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL_2x2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/PE_SEL_4" type="logic">
+      <obj_property name="ElementShortName">PE_SEL_4</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL_4</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/WRADDR_START" type="logic">
+      <obj_property name="ElementShortName">WRADDR_START</obj_property>
+      <obj_property name="ObjectShortName">WRADDR_START</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/STORE_DONE" type="logic">
+      <obj_property name="ElementShortName">STORE_DONE</obj_property>
+      <obj_property name="ObjectShortName">STORE_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/START_SIGNAL" type="logic">
+      <obj_property name="ElementShortName">START_SIGNAL</obj_property>
+      <obj_property name="ObjectShortName">START_SIGNAL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/STOP_SIGNAL" type="logic">
+      <obj_property name="ElementShortName">STOP_SIGNAL</obj_property>
+      <obj_property name="ObjectShortName">STOP_SIGNAL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/WRITE_MAT" type="logic">
+      <obj_property name="ElementShortName">WRITE_MAT</obj_property>
+      <obj_property name="ObjectShortName">WRITE_MAT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/DATAIN" type="array">
+      <obj_property name="ElementShortName">DATAIN[3:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">DATAIN[3:0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/DATAOUT" type="array">
+      <obj_property name="ElementShortName">DATAOUT[3:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">DATAOUT[3:0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MATA[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MATA[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE1/MATA[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE1/MATA[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE2/MATA[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE2/MATA[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE3/MATA[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE3/MATA[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MAT_MUX" type="logic">
+      <obj_property name="ElementShortName">MAT_MUX</obj_property>
+      <obj_property name="ObjectShortName">MAT_MUX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MATB[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE0/MATB[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE1/MATB[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE1/MATB[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE2/MATB[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE2/MATB[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE3/MATB[1]" type="array">
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE3/MATB[0]" type="array">
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/CU_PE_tb/dut/PE1/ADDR" type="array">
+      <obj_property name="ElementShortName">ADDR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR[3:0]</obj_property>
+   </wvobject>
+</wave_config>

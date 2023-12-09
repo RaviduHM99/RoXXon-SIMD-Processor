@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="Processing_Element_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="Processing_Element_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="20.946 ns"></ZoomStartTime>
+      <ZoomEndTime time="102.347 ns"></ZoomEndTime>
+      <Cursor1Time time="33.846 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="136"></NameColumnWidth>
+      <ValueColumnWidth column_width="78"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="17" />
+   <wvobject fp_name="/Processing_Element_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/RST_ADD" type="logic">
+      <obj_property name="ElementShortName">RST_ADD</obj_property>
+      <obj_property name="ObjectShortName">RST_ADD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/DATAIN" type="array">
+      <obj_property name="ElementShortName">DATAIN[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DATAIN[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/MAC_CTRL" type="logic">
+      <obj_property name="ElementShortName">MAC_CTRL</obj_property>
+      <obj_property name="ObjectShortName">MAC_CTRL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/RST_ACC" type="logic">
+      <obj_property name="ElementShortName">RST_ACC</obj_property>
+      <obj_property name="ObjectShortName">RST_ACC</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/RST_PC" type="logic">
+      <obj_property name="ElementShortName">RST_PC</obj_property>
+      <obj_property name="ObjectShortName">RST_PC</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/MAT_MUX" type="logic">
+      <obj_property name="ElementShortName">MAT_MUX</obj_property>
+      <obj_property name="ObjectShortName">MAT_MUX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/WRITE_MAT" type="logic">
+      <obj_property name="ElementShortName">WRITE_MAT</obj_property>
+      <obj_property name="ObjectShortName">WRITE_MAT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/DIMEN" type="array">
+      <obj_property name="ElementShortName">DIMEN[1:0]</obj_property>
+      <obj_property name="ObjectShortName">DIMEN[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/OUT_READY" type="logic">
+      <obj_property name="ElementShortName">OUT_READY</obj_property>
+      <obj_property name="ObjectShortName">OUT_READY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/MAC_DONE" type="logic">
+      <obj_property name="ElementShortName">MAC_DONE</obj_property>
+      <obj_property name="ObjectShortName">MAC_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/DATAOUT" type="array">
+      <obj_property name="ElementShortName">DATAOUT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DATAOUT[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/N" type="array">
+      <obj_property name="ElementShortName">N[31:0]</obj_property>
+      <obj_property name="ObjectShortName">N[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/CLK_PERIOD" type="array">
+      <obj_property name="ElementShortName">CLK_PERIOD[31:0]</obj_property>
+      <obj_property name="ObjectShortName">CLK_PERIOD[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/dut/ACC_DATA" type="array">
+      <obj_property name="ElementShortName">ACC_DATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ACC_DATA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/dut/INC_PC" type="logic">
+      <obj_property name="ElementShortName">INC_PC</obj_property>
+      <obj_property name="ObjectShortName">INC_PC</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processing_Element_tb/dut/PC" type="array">
+      <obj_property name="ElementShortName">PC[3:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[3:0]</obj_property>
+   </wvobject>
+</wave_config>

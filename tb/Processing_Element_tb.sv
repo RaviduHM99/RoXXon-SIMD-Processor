@@ -3,10 +3,21 @@ module Processing_Element_tb;
     localparam N = 16;
     localparam CLK_PERIOD = 10;
 
-    logic CLK=0, RSTN=0;
-    logic [N-1:0][31:0] DATAIN;
-    logic MAC_CTRL, RST_MUL, INC_PC, MAT_MUX, WRITE_MAT;
-    logic [$clog2(N)-1:0]PC_Counter;
+    logic CLK=0;
+
+    logic RST_ADD;
+    logic [31:0] DATAIN;
+    
+    logic MAC_CTRL;
+    logic RST_ACC;
+    logic RST_PC;
+
+    logic MAT_MUX;
+    logic WRITE_MAT;
+    logic [1:0] DIMEN;
+    logic OUT_READY;
+
+    logic MAC_DONE;
     logic [31:0] DATAOUT;
 
     Processing_Element #(.N(N)) dut (.*);
@@ -17,35 +28,69 @@ module Processing_Element_tb;
 
     initial begin
         $dumpfile("dump.vcd"); $dumpvars;
+        @(posedge CLK); 
+        #1 RST_PC <= 1'b1; RST_ADD <= 1'b1; RST_ACC <= 1'b1;
+        #(CLK_PERIOD) 
+        RST_PC <= 1'b0; RST_ADD <= 1'b0; RST_ACC <= 1'b0;
+        MAC_CTRL <= 1'b0;
+        MAT_MUX <= 1'b0;
+        WRITE_MAT <= 1'b0;
+        MAT_MUX <= 1'b0;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+        DATAIN <= 32'dz;
+
+///////// 2x2 Matrix /////////
+        #(CLK_PERIOD) 
+        DATAIN <= 32'd45;
+        MAC_CTRL <= 1'b0;
+        MAT_MUX <= 1'b1;
+        WRITE_MAT <= 1'b1;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+
+        #(CLK_PERIOD) //RESET ADDR then LOAD B
+        DATAIN <= 32'd34;
+        MAC_CTRL <= 1'b0;
+        WRITE_MAT <= 1'b1;
+        MAT_MUX <= 1'b1;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+        RST_ADD <= 1'b1;
+
+        #(CLK_PERIOD)
+        DATAIN <= 32'd65;
+        MAC_CTRL <= 1'b0;
+        WRITE_MAT <= 1'b1;
+        MAT_MUX <= 1'b0;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+        RST_ADD <= 1'b0;
+
+        #(CLK_PERIOD)
+        DATAIN <= 32'd79;
+        MAC_CTRL <= 1'b0;
+        WRITE_MAT <= 1'b1;
+        MAT_MUX <= 1'b0;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+
+        #(CLK_PERIOD*1) //MULTACC
+        DATAIN <= 32'dz;
+        MAC_CTRL <= 1'b1;
+        WRITE_MAT <= 1'b0;
+        MAT_MUX <= 1'b0;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b0;
+
+        #(CLK_PERIOD*3) //DATAOUT
+        DATAIN <= 32'dz;
+        MAC_CTRL <= 1'b0;
+        WRITE_MAT <= 1'b0;
+        MAT_MUX <= 1'b0;
+        DIMEN <= 2'b00;
+        OUT_READY <= 1'b1;
         #(CLK_PERIOD*2)
-        @(posedge CLK); //RESET test
-        #1 RSTN <= 1; RST_MUL <= 1;
-        #(CLK_PERIOD) //FETCH MAT A
-        RSTN <= 0; RST_MUL <= 0;
-        MAT_MUX <= 0;
-        INC_PC <= 0;
-        MAC_CTRL <= 0;
-        WRITE_MAT <= 1;
-        DATAIN <= {32'd1, 32'd2, 32'd3, 32'd4, 32'd5, 32'd6, 32'd7, 32'd8, 32'd9, 32'd10, 32'd11, 32'd12, 32'd13, 32'd14, 32'd15, 32'd16};
-        #(CLK_PERIOD*1) //FETCH MAT B
-        MAT_MUX <= 1; 
-        INC_PC <= 0;
-        MAC_CTRL <= 0;
-        WRITE_MAT <= 1;
-        DATAIN <= {32'd1, 32'd2, 32'd3, 32'd4, 32'd5, 32'd6, 32'd7, 32'd8, 32'd9, 32'd10, 32'd11, 32'd12, 32'd13, 32'd14, 32'd15, 32'd16};
-        #(CLK_PERIOD*1) // Vector Multiplication and Accumulation
-        MAT_MUX <= 0;
-        INC_PC <= 1;
-        MAC_CTRL <= 1;
-        WRITE_MAT <= 0;
-        DATAIN <= 'dx;
-        #(CLK_PERIOD*16) // Ending Vecto Ops
-        MAT_MUX <= 0;
-        INC_PC <= 0;
-        MAC_CTRL <= 0;
-        WRITE_MAT <= 0;
-        DATAIN <= 'dx;
-        #(CLK_PERIOD*3)
         $finish();
     end
     

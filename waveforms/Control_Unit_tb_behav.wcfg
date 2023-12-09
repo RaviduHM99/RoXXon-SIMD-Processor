@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="Control_Unit_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="Control_Unit_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="37.336 ns"></ZoomStartTime>
+      <ZoomEndTime time="119.137 ns"></ZoomEndTime>
+      <Cursor1Time time="175.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="136"></NameColumnWidth>
+      <ValueColumnWidth column_width="74"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="27" />
+   <wvobject fp_name="/Control_Unit_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/RSTN" type="logic">
+      <obj_property name="ElementShortName">RSTN</obj_property>
+      <obj_property name="ObjectShortName">RSTN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/START_SIGNAL" type="logic">
+      <obj_property name="ElementShortName">START_SIGNAL</obj_property>
+      <obj_property name="ObjectShortName">START_SIGNAL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/dut/NEXT_STATE" type="array">
+      <obj_property name="ElementShortName">NEXT_STATE[2:0]</obj_property>
+      <obj_property name="ObjectShortName">NEXT_STATE[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/dut/STATE" type="array">
+      <obj_property name="ElementShortName">STATE[2:0]</obj_property>
+      <obj_property name="ObjectShortName">STATE[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/INSTR" type="array">
+      <obj_property name="ElementShortName">INSTR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">INSTR[31:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/PC_INCR" type="logic">
+      <obj_property name="ElementShortName">PC_INCR</obj_property>
+      <obj_property name="ObjectShortName">PC_INCR</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/INSTR_DONE" type="logic">
+      <obj_property name="ElementShortName">INSTR_DONE</obj_property>
+      <obj_property name="ObjectShortName">INSTR_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/RST_ADD" type="array">
+      <obj_property name="ElementShortName">RST_ADD[3:0]</obj_property>
+      <obj_property name="ObjectShortName">RST_ADD[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/MAC_CTRL" type="array">
+      <obj_property name="ElementShortName">MAC_CTRL[3:0]</obj_property>
+      <obj_property name="ObjectShortName">MAC_CTRL[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/RST_ACC" type="array">
+      <obj_property name="ElementShortName">RST_ACC[3:0]</obj_property>
+      <obj_property name="ObjectShortName">RST_ACC[3:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/RST_PC" type="array">
+      <obj_property name="ElementShortName">RST_PC[3:0]</obj_property>
+      <obj_property name="ObjectShortName">RST_PC[3:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/MAT_MUX" type="array">
+      <obj_property name="ElementShortName">MAT_MUX[3:0]</obj_property>
+      <obj_property name="ObjectShortName">MAT_MUX[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/WRITE_MAT" type="array">
+      <obj_property name="ElementShortName">WRITE_MAT[3:0]</obj_property>
+      <obj_property name="ObjectShortName">WRITE_MAT[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/OUT_READY" type="array">
+      <obj_property name="ElementShortName">OUT_READY[3:0]</obj_property>
+      <obj_property name="ObjectShortName">OUT_READY[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/MAC_DONE" type="logic">
+      <obj_property name="ElementShortName">MAC_DONE</obj_property>
+      <obj_property name="ObjectShortName">MAC_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/DIMEN" type="array">
+      <obj_property name="ElementShortName">DIMEN[1:0]</obj_property>
+      <obj_property name="ObjectShortName">DIMEN[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/ADDR_START" type="logic">
+      <obj_property name="ElementShortName">ADDR_START</obj_property>
+      <obj_property name="ObjectShortName">ADDR_START</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/ADDR_RST" type="logic">
+      <obj_property name="ElementShortName">ADDR_RST</obj_property>
+      <obj_property name="ObjectShortName">ADDR_RST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/ADDRESS" type="array">
+      <obj_property name="ElementShortName">ADDRESS[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDRESS[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/FETCH_DONE" type="logic">
+      <obj_property name="ElementShortName">FETCH_DONE</obj_property>
+      <obj_property name="ObjectShortName">FETCH_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/STORE_DONE" type="logic">
+      <obj_property name="ElementShortName">STORE_DONE</obj_property>
+      <obj_property name="ObjectShortName">STORE_DONE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/PE_SEL" type="array">
+      <obj_property name="ElementShortName">PE_SEL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/PE_SEL_2x2" type="logic">
+      <obj_property name="ElementShortName">PE_SEL_2x2</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL_2x2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/PE_SEL_4" type="logic">
+      <obj_property name="ElementShortName">PE_SEL_4</obj_property>
+      <obj_property name="ObjectShortName">PE_SEL_4</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/WRADDR_START" type="logic">
+      <obj_property name="ElementShortName">WRADDR_START</obj_property>
+      <obj_property name="ObjectShortName">WRADDR_START</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Control_Unit_tb/STOP_SIGNAL" type="logic">
+      <obj_property name="ElementShortName">STOP_SIGNAL</obj_property>
+      <obj_property name="ObjectShortName">STOP_SIGNAL</obj_property>
+   </wvobject>
+</wave_config>
