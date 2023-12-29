@@ -4,7 +4,7 @@ module Data_Fetch(
     input logic CLK,
     //input logic RSTN,
 
-    output logic [31:0] addrb, // BRAM Ports
+    output logic [12:0] addrb, // BRAM Ports
     output logic [31:0] dinb,
     input logic [31:0] doutb,
     output logic enb,
@@ -82,11 +82,14 @@ module Data_Fetch(
     logic [31:0] DATA_PE_IN;
     logic [3:0][31:0] DATA_PE_OUT;
 
-    assign addrb = ADDRESS + ADDR;
+    logic [16:0] IN_ADDRESS;
+    assign IN_ADDRESS = ADDRESS + ADDR;
+    assign addrb = IN_ADDRESS[12:0];
+
     assign dinb = (WRADDR_START) ? DATA_PE_OUT[ADDR] : 32'd0;
     assign DATA_PE_IN = (ADDR_START) ? doutb : 32'd0; 
     assign enb = (ADDR_START | WRADDR_START) ? 1'b1 : 1'b0; 
-    assign web = (WRADDR_START) ? 3'b111 : 3'b0; ////// store check web datasheet ///////
+    assign web = (WRADDR_START) ? 4'b1111 : 4'b0; ////// store check web datasheet ///////
 
     always_comb begin
         unique case (PE_SEL)
@@ -153,7 +156,7 @@ module Data_Fetch(
         endcase
     end
 
-    assign STORE_DONE = (ADDR == 32'd3 & WRADDR_START) ? 1'b1 : 1'b0;
+    assign STORE_DONE = (ADDR == 32'd2 & WRADDR_START) ? 1'b1 : 1'b0;
     assign DATA_PE_OUT = {PE_DOUT_3, PE_DOUT_2, PE_DOUT_1, PE_DOUT_0};
 
 

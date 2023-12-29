@@ -16,6 +16,14 @@ module Control_Unit(
     output logic [3:0] OUT_READY,
     input logic MAC_DONE, //AND All MAC DONE in top module
 
+    //
+    output logic ADD_CTRL,
+    output logic ADD_INC,
+    output logic ADD_RST, 
+    output logic ADD_STORE,
+    output logic [3:0] STORE_ADDRESS, 
+    input logic ADD_DONE, //AND All ADD DONE in top module//
+
     output logic [1:0] DIMEN, // DATA FETCH LOAD
     output logic ADDR_START,
     output logic ADDR_RST,
@@ -28,11 +36,16 @@ module Control_Unit(
     output logic WRADDR_START, // DATA FETCH STORE
     input logic STORE_DONE,
 
+    //output logic WBEN,
+    //output logic [12:0] WBADDR,
+    //output logic [12:0] WBVALUE,
+
     input logic START_SIGNAL, //GPIO
     output logic STOP_SIGNAL
 );
 
-enum logic [2:0] { IDLE, FETCH, LOADA, LOADB, MULTACC, STORE, STOP} STATE, NEXT_STATE;
+(*KEEP = "true"*)
+(*mark_debug = "true"*)        enum logic [2:0] { IDLE, FETCH, LOADA, LOADB, MULTACC, STORE, STOP, ADDSUB} STATE, NEXT_STATE;
 
 always_comb begin
     unique case (INSTR[2:0])
@@ -43,11 +56,12 @@ always_comb begin
         3'd4 : NEXT_STATE = MULTACC;
         3'd5 : NEXT_STATE = STORE;
         3'd6 : NEXT_STATE = STOP;
-        default : NEXT_STATE = IDLE;  
+        //
+        3'd7 : NEXT_STATE = ADDSUB;  
     endcase
 end
 
-assign INSTR_DONE = ((STATE == IDLE & START_SIGNAL) | FETCH_DONE | MAC_DONE | STORE_DONE) ? 1'b1 : 1'b0;
+assign INSTR_DONE = ((STATE == IDLE & START_SIGNAL) | FETCH_DONE | MAC_DONE | STORE_DONE | ADD_DONE) ? 1'b1 : 1'b0;
 
 always_ff @( posedge CLK ) begin 
     if (RSTN) begin
@@ -60,7 +74,6 @@ always_ff @( posedge CLK ) begin
         ADDR_RST <= 1'b1;
         PE_SEL <= 2'b00;
         WRADDR_START <= 1'b0;
-        //INSTR_DONE <= 1'b0;
         STOP_SIGNAL <= 1'b0;
         DIMEN <= 2'b00;
         MAT_MUX <= 4'b0000;
@@ -70,6 +83,16 @@ always_ff @( posedge CLK ) begin
         ADDRESS <= 17'd0;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
+        /*WBEN <= 1'b0;
+        WBADDR <= 13'd0;
+        WBVALUE <= 13'd0;*/
+//
+        ADD_STORE <= 1'b0;
+        STORE_ADDRESS <= 4'd0; 
+        ADD_CTRL <= 1'b0;
+        ADD_INC <= 1'b0;
+        ADD_RST <= 1'b1;
+//
     end
     else begin
 
@@ -81,7 +104,6 @@ always_ff @( posedge CLK ) begin
         ADDR_RST <= 1'b0;
         PE_SEL <= 2'b00;
         WRADDR_START <= 1'b0;
-        //INSTR_DONE <= 1'b0;
         STOP_SIGNAL <= 1'b0;
         DIMEN <= 2'b00;
         MAT_MUX <= 4'b0000;
@@ -91,11 +113,19 @@ always_ff @( posedge CLK ) begin
         ADDRESS <= ADDRESS;
         PE_SEL_2x2 <= 1'b0;
         PE_SEL_4 <= 1'b0;
-        
+        /*WBEN <= 1'b0;
+        WBADDR <= 13'd0;
+        WBVALUE <= 13'd0;*/
+//
+        ADD_STORE <= 1'b0;
+        STORE_ADDRESS <= 4'd0; 
+        ADD_CTRL <= 1'b0;
+        ADD_INC <= 1'b0;
+        ADD_RST <= 1'b0;
+//
         unique case (STATE)
             IDLE:begin
                 STATE <= (START_SIGNAL) ? FETCH : IDLE;
-                //INSTR_DONE <= 1'b1;
             end
 
             FETCH: begin
@@ -130,9 +160,9 @@ always_ff @( posedge CLK ) begin
                 ADDRESS <= INSTR[31:15];
                 PE_SEL <= INSTR[8:7];
                 PE_SEL_2x2 <= INSTR[13];
+                PE_SEL_4 <= INSTR[14];
 
                 STATE <= (FETCH_DONE) ? FETCH : LOADA;
-                //INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
             end
 
             LOADB: begin 
@@ -159,7 +189,6 @@ always_ff @( posedge CLK ) begin
                 PE_SEL_4 <= INSTR[14];
 
                 STATE <= (FETCH_DONE) ? FETCH : LOADB;
-                //INSTR_DONE <= (FETCH_DONE) ? 1'b1 : 1'b0;
             end
 
             MULTACC: begin
@@ -168,7 +197,6 @@ always_ff @( posedge CLK ) begin
 
                 STATE <= (MAC_DONE) ? FETCH : MULTACC;
                 RST_PC <= (MAC_DONE) ? 4'b1111 : 4'b0000;
-                //INSTR_DONE <= (MAC_DONE) ? 1'b1 : 1'b0;
             end
 
             STORE: begin
@@ -181,12 +209,30 @@ always_ff @( posedge CLK ) begin
                 WRADDR_START <= 1'b1;
 
                 STATE <= (STORE_DONE) ? FETCH : STORE;
-                //INSTR_DONE <= (STORE_DONE) ? 1'b1 : 1'b0;
+
+                //
+                ADD_STORE <= (INSTR[6]) ? 1'b1 : 1'b0;
+                STORE_ADDRESS <= INSTR[12:9]; 
+                //
             end
+
+            //
+            ADDSUB: begin
+                ADD_CTRL <= INSTR[7];
+                ADD_INC <= (ADD_DONE) ? 1'b0 : 1'b1;
+                DIMEN <= INSTR[4:3];
+
+                STATE <= (ADD_DONE) ? FETCH : ADDSUB;
+                ADD_RST <= (ADD_DONE) ? 1'b1 : 1'b0;
+            end
+            //
 
             STOP: begin
                 STOP_SIGNAL <= 1'b1;
                 STATE <= STOP; //add two stop instructions
+                //WBEN <= 1'b1;
+                //WBADDR <= INSTR[27:15];
+                //WBVALUE <= {INSTR[31:28], INSTR[14:6]};
             end
 
         endcase

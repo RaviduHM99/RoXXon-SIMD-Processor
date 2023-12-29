@@ -12,8 +12,8 @@ module Instr_Fetch #(
     input logic [31:0] INSTR_AXI,
     output logic [$clog2(N)-1:0] PC_AXI
 );
-
-    reg [$clog2(N)-1:0] PC;
+    (*KEEP = "true"*)
+(*mark_debug = "true"*)   reg [$clog2(N)-1:0] PC;
 
     always_ff @(posedge CLK) begin
         if (RSTN) PC <= 'd0;
