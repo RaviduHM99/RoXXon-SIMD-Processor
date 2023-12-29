@@ -10,8 +10,8 @@ def read_matrix_from_file(filename):
     matrix = np.loadtxt(filename)
     return matrix
 
-def matrix_multiply(matrix1, matrix2):
-    result = np.matmul(matrix1, matrix2)
+def matrix_addition(matrix1, matrix2):
+    result = np.add(matrix1, matrix2)
     return result
 
 def print_matrix(matrix, label):
@@ -22,21 +22,18 @@ def main():
     # File names
     MatrixA_filename = 'MatrixA_data.txt'
     MatrixB_filename = 'MatrixB_data.txt'
-    MatrixB_tr_filename = 'MatrixB_tr_data.txt'
-    Result_Matrix_filename = 'Result_Matrix_data.txt'
+    Result_Matrix_filename = 'Result_Matrix_Addition_data.txt'
 
     # Read matrices from files
     MatrixA = read_matrix_from_file(MatrixA_filename)
     MatrixB = read_matrix_from_file(MatrixB_filename)
-    MatrixB_tr = read_matrix_from_file(MatrixB_tr_filename)
 
     # Print original and transposed matrices
     print_matrix(MatrixA, "Matrix A")
     print_matrix(MatrixB, "Matrix B")
-    print_matrix(MatrixB_tr, "Matrix B trans")
 
     # Perform matrix multiplication
-    result_matrix = matrix_multiply(MatrixA, MatrixB)
+    result_matrix = matrix_addition(MatrixA, MatrixB)
 
     # Print the result
     print_matrix(result_matrix, "Result")

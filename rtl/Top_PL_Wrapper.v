@@ -15,7 +15,7 @@ module Top_PL_Wrapper(
         .CLK(CLK),
         .RSTN(RSTN),
         .START_SIGNAL(START_SIGNAL),
-        .STOP_SIGNAL(START_SIGNAL)
+        .STOP_SIGNAL(STOP_SIGNAL)
     );
     
 endmodule

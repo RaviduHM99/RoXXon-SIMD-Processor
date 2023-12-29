@@ -1,13 +1,15 @@
 module Top_PL_BRAM_AXI_tb;
     timeunit 1ns/1ps;
-    localparam CLK_PERIOD = 10;
+    localparam CLK_PERIOD = 8;
     localparam N =512;
 
     logic CLK=0, RSTN=0;
 
     logic START_SIGNAL; //GPIO
     logic STOP_SIGNAL;
-
+    logic WBEN;
+    logic [12:0] WBADDR;
+    logic [12:0] WBVALUE;
     Top_PL_BRAM_AXI dut (.*);
 
     initial forever begin
