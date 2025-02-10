@@ -5,7 +5,7 @@ module Top_PL_tb;
 
     logic CLK=0, RSTN=0;
 
-    logic [31:0] addrb; // BRAM Ports
+    logic [12:0] addrb; // BRAM Ports
     logic [31:0] dinb;
     logic [31:0] doutb;
     logic enb;

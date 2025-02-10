@@ -5,10 +5,6 @@ module Top_PL #(
 )(
     input logic CLK, RSTN,
 
-    output logic WBEN,
-    output logic [12:0] WBADDR,
-    output logic [12:0] WBVALUE,
-
     output logic [12:0] addrb, // BRAM Ports
     output logic [31:0] dinb,
     input logic [31:0] doutb,

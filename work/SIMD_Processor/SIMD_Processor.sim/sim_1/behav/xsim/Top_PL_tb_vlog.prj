@@ -1,0 +1,14 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../../../rtl/Control_Unit.sv" \
+"../../../../../../rtl/Data_Fetch.sv" \
+"../../../../../../rtl/Instr_Fetch.sv" \
+"../../../../../../rtl/Processing_Element.sv" \
+"../../../../../../rtl/Top_PL.sv" \
+"../../../../../../tb/Top_PL_tb.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
